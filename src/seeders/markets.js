@@ -1,33 +1,33 @@
 import { faker } from "@faker-js/faker"
-import { MarketModel } from "../models/index.js"
+import { MarketModel, UserModel } from "../models/index.js"
 import slugify from "slugify"
 import { randomNumber } from "../utils/index.js"
 import { marketsQueries } from "../queries/index.js"
 
 export const createFakeMarkets = async (record) => {
     const fakeMarkets = []
+    const users = await UserModel.find()
+
     for (let index = 0; index < record; index++) {
+        const randomUser = users[randomNumber(0, users.length - 1)]
+
         const name =
             faker.random.word() + faker.random.word() + faker.random.word()
         const username =
             faker.random.word() + faker.random.word() + faker.random.word()
-        fakeMarkets.push({
+        const market = new MarketModel({
             name,
             username,
             title: faker.lorem.sentence(),
             about: faker.lorem.paragraph(),
             description: faker.commerce.productDescription(),
-            UserId: randomNumber(1, record),
+            User: randomUser._id,
         })
+        fakeMarkets.push(market)
     }
 
-    const markets = await Market.bulkCreate(fakeMarkets)
+    const markets = await MarketModel.bulkSave(fakeMarkets)
 
-    /**
-     * Loop through all markets and create a fake image for each one
-     * Loop through all markets and create a fake avatar for each one
-     * Loop through all markets and create a fake category for each one
-     */
     for (let marketIndex = 0; marketIndex < markets.length; marketIndex++) {
         const market = markets[marketIndex]
 

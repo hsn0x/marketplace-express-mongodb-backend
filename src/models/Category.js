@@ -1,3 +1,4 @@
+import slugify from "slugify"
 import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
@@ -16,11 +17,23 @@ const schema = Schema(
             type: String,
         },
         parentId: {
-            type: Number,
+            type: String,
         },
         type: {
             type: String,
         },
+        Images: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Image",
+            },
+        ],
+        Avatars: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Avatar",
+            },
+        ],
     },
     { timestamps: true }
 )

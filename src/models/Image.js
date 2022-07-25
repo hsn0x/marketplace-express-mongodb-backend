@@ -41,6 +41,18 @@ const schema = Schema(
         secure_url: {
             type: String,
         },
+        Products: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Product",
+            },
+        ],
+        Categories: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Category",
+            },
+        ],
     },
     { timestamps: true }
 )

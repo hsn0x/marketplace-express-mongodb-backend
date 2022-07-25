@@ -1,3 +1,4 @@
+import slugify from "slugify"
 import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
@@ -13,12 +14,16 @@ const schema = Schema(
             type: String,
             required: true,
         },
+        Product: {
+            type: Schema.Types.ObjectId,
+            ref: "Product",
+        },
     },
     { timestamps: true }
 )
 
 schema.pre("save", function (next) {
-    this.slug = slugify(this.name, { lower: true })
+    this.slug = slugify(this.title, { lower: true })
     next()
 })
 

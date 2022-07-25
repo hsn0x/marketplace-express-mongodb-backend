@@ -1,3 +1,4 @@
+import slugify from "slugify"
 import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
@@ -28,6 +29,24 @@ const schema = Schema(
             type: Number,
             required: true,
         },
+        Comments: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Comment",
+            },
+        ],
+        Reviews: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Review",
+            },
+        ],
+        Categories: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Category",
+            },
+        ],
     },
     { timestamps: true }
 )
