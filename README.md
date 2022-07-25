@@ -9,9 +9,9 @@ I'm a full stack developer...
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/realhassaneben)
 [![twitter](https://img.shields.io/badge/twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/realhassaneben)
 
-# HSN Marketplace Expressjs Sequelize Backend
+# HSN Marketplace Express MongoDB Backend
 
-Multiple Stores Listing Backend API
+Multiple Stores Listing Backend with MongoDB Database API
 
 ## Authors
 
@@ -27,14 +27,14 @@ on progress
 
 ## Tech Stack
 
-**Server:** Node, Express, Sequelize
+**Server:** Node, Express, MongoDB
 
 ## Run Locally
 
 Clone the project
 
 ```bash
-  git clone https://github.com/hsn0x/hsn-marketplace-expressjs-sequelize-backend.git
+  git clone https://github.com/hsn0x/marketplace-express-mongodb-backend.git
 ```
 
 Go to the project directory
