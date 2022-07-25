@@ -1,6 +1,6 @@
-import Ajv from "ajv";
+import Ajv from "ajv"
 
-const ajv = new Ajv();
+const ajv = new Ajv()
 
 const CreateMarketSchema = {
     type: "object",
@@ -28,7 +28,7 @@ const CreateMarketSchema = {
         "UserId",
     ],
     additionalProperties: false,
-};
+}
 
 const UpdateMarketSchema = {
     type: "object",
@@ -56,23 +56,24 @@ const UpdateMarketSchema = {
         "UserId",
     ],
     additionalProperties: false,
-};
-
-export const validateCreateMarket = (marketData) => {
-    const valid = ajv.validate(CreateMarketSchema, marketData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
-export const validateUpdateMarket = (marketData) => {
-    const valid = ajv.validate(UpdateMarketSchema, marketData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
+}
+export default {
+    validateCreateMarket: (marketData) => {
+        const valid = ajv.validate(CreateMarketSchema, marketData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+    validateUpdateMarket: (marketData) => {
+        const valid = ajv.validate(UpdateMarketSchema, marketData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+}

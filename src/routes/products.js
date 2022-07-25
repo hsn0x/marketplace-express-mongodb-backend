@@ -1,26 +1,27 @@
-import { Router } from "express";
-import {
-    createProduct,
-    deleteProduct,
-    getProductById,
-    getProductsBySearch,
-    getProductBySlug,
-    getProducts,
-    updateProduct,
-    getProductsBySearchWithFilters,
-} from "../controllers/Product.js";
-import { isAuth } from "../middleware/Auth.js";
-import { isProductOwner } from "../middleware/Product.js";
+import { Router } from "express"
+import { ProductController } from "../controllers/index.js"
+import { AuthMiddleware } from "../middlewares/index.js"
+import { ProductMiddleware } from "../middlewares/index.js"
 
-const router = Router();
+const router = Router()
 
-router.get("/", getProducts);
-router.get("/:id", getProductById);
-router.get("/title/:slug", getProductBySlug);
-router.get("/q/filters/:query", getProductsBySearchWithFilters);
-router.get("/q/:query", getProductsBySearch);
-router.post("/", isAuth, createProduct);
-router.put("/:id", isAuth, isProductOwner, updateProduct);
-router.delete("/:id", isAuth, isProductOwner, deleteProduct);
+router.get("/", ProductController.getAll)
+router.get("/:id", ProductController.getById)
+router.get("/title/:slug", ProductController.getBySlug)
+router.get("/q/filters/:query", ProductController.getAllBySearchWithFilters)
+router.get("/q/:query", ProductController.getAllBySearch)
+router.post("/", AuthMiddleware.isAuth, ProductController.create)
+router.put(
+    "/:id",
+    AuthMiddleware.isAuth,
+    ProductMiddleware.isOwner,
+    ProductController.update
+)
+router.delete(
+    "/:id",
+    AuthMiddleware.isAuth,
+    ProductMiddleware.isOwner,
+    ProductController.remove
+)
 
-export default router;
+export default router

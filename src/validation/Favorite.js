@@ -1,6 +1,6 @@
-import Ajv from "ajv";
+import Ajv from "ajv"
 
-const ajv = new Ajv();
+const ajv = new Ajv()
 
 const CreateFavoriteSchema = {
     type: "object",
@@ -28,7 +28,7 @@ const CreateFavoriteSchema = {
         "UserId",
     ],
     additionalProperties: false,
-};
+}
 
 const UpdateFavoriteSchema = {
     type: "object",
@@ -56,23 +56,25 @@ const UpdateFavoriteSchema = {
         "UserId",
     ],
     additionalProperties: false,
-};
+}
 
-export const validateCreateFavorite = (favoriteData) => {
-    const valid = ajv.validate(CreateFavoriteSchema, favoriteData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
-export const validateUpdateFavorite = (favoriteData) => {
-    const valid = ajv.validate(UpdateFavoriteSchema, favoriteData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
+export default {
+    validateCreateFavorite: (favoriteData) => {
+        const valid = ajv.validate(CreateFavoriteSchema, favoriteData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+    validateUpdateFavorite: (favoriteData) => {
+        const valid = ajv.validate(UpdateFavoriteSchema, favoriteData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+}

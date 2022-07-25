@@ -1,9 +1,8 @@
-import { Op } from "sequelize"
-import { Vote, Product } from "../scopes/index.js"
-import { findByPkProductQuery } from "./products.js"
+import { VoteModel } from "../models/index.js"
+import { productsQueries } from "./index.js"
 export default {
-    findAllVotesQuery: async () => {
-        const votes = await Vote.scope("withAssociations").findAll()
+    findAllQuery: async () => {
+        const votes = await VoteModel.scope("withAssociations").findAll()
         return votes
     },
     findAllVotesBySearchQuery: async ({ query }) => {
@@ -13,32 +12,34 @@ export default {
             .filter((q) => q !== "")
             .map((q) => ({ name: { [Op.vote]: `%${q}%` } }))
 
-        const vote = await Vote.scope("withAssociations").findAll({
+        const vote = await VoteModel.scope("withAssociations").findAll({
             where: {
                 [Op.or]: [...queries],
             },
         })
         return vote
     },
-    findByPkVoteQuery: async (id) => {
-        const vote = await Vote.scope("withAssociations").findByPk(id)
+    findByPkQuery: async (id) => {
+        const vote = await VoteModel.scope("withAssociations").findByPk(id)
         return vote
     },
-    findOneVoteQuery: async (where) => {
-        const vote = await Vote.scope("withAssociations").findOne({ where })
+    findOneQuery: async (where) => {
+        const vote = await VoteModel.scope("withAssociations").findOne({
+            where,
+        })
         return vote
     },
-    createVoteQuery: async (voteData) => {
-        const product = await findByPkProductQuery(voteData.ProductId)
+    createQuery: async (voteData) => {
+        const product = await findByPkQuery(voteData.ProductId)
 
-        const createdVote = await product.createVote({
+        const createdVote = await product.create({
             UserId: voteData.UserId,
         })
         return createdVote
     },
-    updateVoteQuery: async (voteData, where) => {},
-    deleteVoteQuery: async (where) => {
-        const deletedVote = await Vote.destroy({
+    updateQuery: async (voteData, where) => {},
+    removeQuery: async (where) => {
+        const deletedVote = await VoteModel.destroy({
             where,
         })
         return deletedVote

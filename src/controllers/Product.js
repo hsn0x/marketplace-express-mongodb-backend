@@ -1,32 +1,21 @@
 import { getPagingData } from "../lib/handlePagination.js"
-import {
-    createProductQuery,
-    deleteProductQuery,
-    findAllProductsQuery,
-    findOneProductQuery,
-    updateProductQuery,
-    findAllProductsBySearchQuery,
-    findAllProductsBySearchQueryWithFilters,
-} from "../queries/products.js"
-import {
-    validateCreateProduct,
-    validateUpdateProduct,
-} from "../validation/Product.js"
+import { productsQueries } from "../queries/index.js"
+import { ProductValidation } from "../validation/index.js"
 export default {
-    getProducts: async (request, response) => {
+    getAll: async (request, response) => {
         const { page, size } = request.query
         const params = {
             page: parseInt(page),
             size: parseInt(size),
         }
-        const products = await findAllProductsQuery(params)
+        const products = await findAllQuery(params)
         if (products) {
             response.status(200).json(products)
         } else {
             response.status(404).json({ message: `Products not found` })
         }
     },
-    getProductsBySearch: async (request, response) => {
+    getAllBySearch: async (request, response) => {
         const query = request.params.query
 
         const products = await findAllProductsBySearchQuery({ query })
@@ -42,7 +31,7 @@ export default {
                 .json({ message: `Product not found with Query: ${query}` })
         }
     },
-    getProductsBySearchWithFilters: async (request, response) => {
+    getAllBySearchWithFilters: async (request, response) => {
         const query = request.params.query
         const filters = {}
         filters.minPrice = Number(request.query.minPrice)
@@ -67,9 +56,9 @@ export default {
                 .json({ message: `Product not found with Query: ${query}` })
         }
     },
-    getProductById: async (request, response) => {
+    getById: async (request, response) => {
         const id = parseInt(request.params.id)
-        const product = await findOneProductQuery({ id })
+        const product = await findOneQuery({ id })
         if (product) {
             response.status(200).json({ product })
         } else {
@@ -78,9 +67,9 @@ export default {
                 .json({ message: `Product not found with ID: ${id}` })
         }
     },
-    getProductBySlug: async (request, response) => {
+    getBySlug: async (request, response) => {
         const slug = request.params.slug
-        const product = await findOneProductQuery({ slug })
+        const product = await findOneQuery({ slug })
         if (product) {
             response.status(200).json({ product })
         } else {
@@ -89,7 +78,7 @@ export default {
                 .json({ message: `Product not found with Slug: ${slug}` })
         }
     },
-    createProduct: async (request, response, next) => {
+    create: async (request, response, next) => {
         const { session, user } = request
         const { title, description, price, quantity, MarketId, CategoriesIds } =
             request.body
@@ -113,7 +102,7 @@ export default {
             })
         }
 
-        const createdProduct = await createProductQuery(productData)
+        const createdProduct = await createQuery(productData)
 
         if (createdProduct) {
             return response.status(201).json({
@@ -126,7 +115,7 @@ export default {
                 .json({ message: `Faile to create a product` })
         }
     },
-    updateProduct: async (request, response) => {
+    update: async (request, response) => {
         const id = parseInt(request.params.id)
         const { session, user } = request
 
@@ -151,7 +140,7 @@ export default {
             })
         }
 
-        const updatedProduct = await updateProductQuery(productData, { id })
+        const updatedProduct = await updateQuery(productData, { id })
 
         if (updatedProduct) {
             return response.status(200).json({
@@ -164,9 +153,9 @@ export default {
                 .json({ message: `Faile to update a product` })
         }
     },
-    deleteProduct: async (request, response) => {
+    remove: async (request, response) => {
         const id = parseInt(request.params.id)
-        await deleteProductQuery({ id })
+        await deleteQuery({ id })
         response.status(200).json({ message: `Product deleted with ID: ${id}` })
     },
 }

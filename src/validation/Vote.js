@@ -1,6 +1,6 @@
-import Ajv from "ajv";
+import Ajv from "ajv"
 
-const ajv = new Ajv();
+const ajv = new Ajv()
 
 const CreateVoteSchema = {
     type: "object",
@@ -28,7 +28,7 @@ const CreateVoteSchema = {
         "UserId",
     ],
     additionalProperties: false,
-};
+}
 
 const UpdateVoteSchema = {
     type: "object",
@@ -56,23 +56,25 @@ const UpdateVoteSchema = {
         "UserId",
     ],
     additionalProperties: false,
-};
+}
 
-export const validateCreateVote = (voteData) => {
-    const valid = ajv.validate(CreateVoteSchema, voteData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
-export const validateUpdateVote = (voteData) => {
-    const valid = ajv.validate(UpdateVoteSchema, voteData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
+export default {
+    validateCreateVote: (voteData) => {
+        const valid = ajv.validate(CreateVoteSchema, voteData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+    validateUpdateVote: (voteData) => {
+        const valid = ajv.validate(UpdateVoteSchema, voteData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+}

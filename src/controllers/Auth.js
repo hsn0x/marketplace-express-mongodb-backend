@@ -1,7 +1,7 @@
-import passport from "passport";
-import { validateRegister } from "../validation/Auth.js";
-import { authQueries } from "../queries/index.js";
-import { genPassword } from "../lib/passwordUtils.js";
+import passport from "passport"
+import { AuthValidation } from "../validation/index.js"
+import { authQueries } from "../queries/index.js"
+import { genPassword } from "../lib/passwordUtils.js"
 
 export default {
     login: (req, res, next) => {
@@ -9,31 +9,45 @@ export default {
             if (err)
                 return res.status(500).json({
                     message: err.message,
-                });
+                })
 
             if (!user)
                 return res.status(401).json({
                     isAuthenticated: req.isAuthenticated(),
                     message: info.message,
-                });
+                })
 
             req.login(user, (err) => {
                 if (err) {
                     return res.status(500).json({
                         isAuthenticated: req.isAuthenticated(),
                         message: err.message,
-                    });
+                    })
                 }
 
                 return res.status(200).json({
                     isAuthenticated: req.isAuthenticated(),
                     message: "Login successful",
-                });
-            });
-        })(req, res, next);
+                })
+            })
+        })(req, res, next)
+    },
+    loginFailure: (req, res, next) => {
+        {
+            return res.status(401).json({
+                message: "Invalid username or password",
+            })
+        }
+    },
+    loginSuccess: (req, res, next) => {
+        {
+            return res.status(200).json({
+                message: "Login successful",
+            })
+        }
     },
     register: async (req, res, next) => {
-        const { firstName, lastName, username, email, password } = req.body;
+        const { firstName, lastName, username, email, password } = req.body
 
         const userData = {
             firstName,
@@ -41,29 +55,29 @@ export default {
             username,
             email,
             password,
-        };
+        }
 
-        const hashedPassword = genPassword(userData.password);
-        userData.passwordHash = hashedPassword.hash;
-        userData.passwordSalt = hashedPassword.salt;
+        const hashedPassword = genPassword(userData.password)
+        userData.passwordHash = hashedPassword.hash
+        userData.passwordSalt = hashedPassword.salt
 
-        const isRegisterValid = validateRegister(userData);
+        const isRegisterValid = validateRegister(userData)
 
         if (!isRegisterValid.valid) {
             return res.status(401).json({
                 valid: isRegisterValid.valid,
                 errors: isRegisterValid.errors,
-            });
+            })
         }
 
-        const user = await authQueries.registerQuery(userData);
+        const user = await authQueries.registerQuery(userData)
 
         if (user) {
-            res.status(201).json(user);
+            res.status(201).json(user)
         } else {
             res.status(500).json({
                 message: `Faile to create a user`,
-            });
+            })
         }
     },
     profile: async (req, res, next) => {
@@ -71,14 +85,14 @@ export default {
             isAuthenticated: req.isAuthenticated(),
             user: req.user,
             message: "Profile retrieved successfully",
-        });
+        })
     },
     logout: async (req, res, next) => {
         req.logout((err) => {
             if (err) {
                 return res.status(500).json({
                     message: err.message,
-                });
+                })
 
                 // next(err);
             }
@@ -87,15 +101,15 @@ export default {
             //     "set-cookie",
             //     "connect.sid=xd; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;"
             // );
-            return next();
-        });
+            return next()
+        })
     },
     logoutSession: async (req, res, next) => {
         return req.session.destroy(function (err) {
             if (err) {
                 return res.status(500).json({
                     message: err.message,
-                });
+                })
 
                 // next(err);
             }
@@ -103,7 +117,7 @@ export default {
             res.status(200).clearCookie("connect.sid", { path: "/" }).json({
                 status: "success",
                 message: "Logged out successfully",
-            });
-        });
+            })
+        })
     },
-};
+}

@@ -1,6 +1,6 @@
-import Ajv from "ajv";
+import Ajv from "ajv"
 
-const ajv = new Ajv();
+const ajv = new Ajv()
 
 const CreateLikeSchema = {
     type: "object",
@@ -28,7 +28,7 @@ const CreateLikeSchema = {
         "UserId",
     ],
     additionalProperties: false,
-};
+}
 
 const UpdateLikeSchema = {
     type: "object",
@@ -56,23 +56,24 @@ const UpdateLikeSchema = {
         "UserId",
     ],
     additionalProperties: false,
-};
-
-export const validateCreateLike = (likeData) => {
-    const valid = ajv.validate(CreateLikeSchema, likeData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
-export const validateUpdateLike = (likeData) => {
-    const valid = ajv.validate(UpdateLikeSchema, likeData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
+}
+export default {
+    validateCreateLike: (likeData) => {
+        const valid = ajv.validate(CreateLikeSchema, likeData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+    validateUpdateLike: (likeData) => {
+        const valid = ajv.validate(UpdateLikeSchema, likeData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+}

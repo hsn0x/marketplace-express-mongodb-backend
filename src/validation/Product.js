@@ -1,6 +1,6 @@
-import Ajv from "ajv";
+import Ajv from "ajv"
 
-const ajv = new Ajv();
+const ajv = new Ajv()
 
 const CreateProductSchema = {
     type: "object",
@@ -28,7 +28,7 @@ const CreateProductSchema = {
         "UserId",
     ],
     additionalProperties: false,
-};
+}
 
 const UpdateProductSchema = {
     type: "object",
@@ -56,23 +56,24 @@ const UpdateProductSchema = {
         "UserId",
     ],
     additionalProperties: false,
-};
-
-export const validateCreateProduct = (productData) => {
-    const valid = ajv.validate(CreateProductSchema, productData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
-export const validateUpdateProduct = (productData) => {
-    const valid = ajv.validate(UpdateProductSchema, productData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
+}
+export default {
+    validateCreateProduct: (productData) => {
+        const valid = ajv.validate(CreateProductSchema, productData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+    validateUpdateProduct: (productData) => {
+        const valid = ajv.validate(UpdateProductSchema, productData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+}

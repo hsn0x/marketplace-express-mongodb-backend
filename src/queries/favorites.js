@@ -1,9 +1,8 @@
-import { Op } from "sequelize"
-import { Favorite, Product } from "../scopes/index.js"
-import { findByPkProductQuery } from "./products.js"
+import { FavoriteModel } from "../models/index.js"
+import { productsQueries } from "./index.js"
 
 export default {
-    findAllFavoritesQuery: async () => {
+    findAllQuery: async () => {
         const favorites = await Favorite.scope("withAssociations").findAll()
         return favorites
     },
@@ -21,26 +20,26 @@ export default {
         })
         return favorite
     },
-    findByPkFavoriteQuery: async (id) => {
+    findByPkQuery: async (id) => {
         const favorite = await Favorite.scope("withAssociations").findByPk(id)
         return favorite
     },
-    findOneFavoriteQuery: async (where) => {
+    findOneQuery: async (where) => {
         const favorite = await Favorite.scope("withAssociations").findOne({
             where,
         })
         return favorite
     },
-    createFavoriteQuery: async (favoriteData) => {
-        const product = await findByPkProductQuery(favoriteData.ProductId)
+    createQuery: async (favoriteData) => {
+        const product = await findByPkQuery(favoriteData.ProductId)
 
-        const createdFavorite = await product.createFavorite({
+        const createdFavorite = await product.create({
             UserId: favoriteData.UserId,
         })
         return createdFavorite
     },
-    updateFavoriteQuery: async (favoriteData, where) => {},
-    deleteFavoriteQuery: async (where) => {
+    updateQuery: async (favoriteData, where) => {},
+    deleteQuery: async (where) => {
         const deletedFavorite = await Favorite.destroy({
             where,
         })

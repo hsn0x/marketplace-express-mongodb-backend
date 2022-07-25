@@ -1,16 +1,16 @@
-import { faker } from "@faker-js/faker";
-import { Market } from "../models/index.js";
-import slugify from "slugify";
-import { randomNumber } from "../utils/index.js";
-import { findAllMarketsQuery } from "../queries/markets.js";
+import { faker } from "@faker-js/faker"
+import { MarketModel } from "../models/index.js"
+import slugify from "slugify"
+import { randomNumber } from "../utils/index.js"
+import { marketsQueries } from "../queries/index.js"
 
 export const createFakeMarkets = async (record) => {
-    const fakeMarkets = [];
+    const fakeMarkets = []
     for (let index = 0; index < record; index++) {
         const name =
-            faker.random.word() + faker.random.word() + faker.random.word();
+            faker.random.word() + faker.random.word() + faker.random.word()
         const username =
-            faker.random.word() + faker.random.word() + faker.random.word();
+            faker.random.word() + faker.random.word() + faker.random.word()
         fakeMarkets.push({
             name,
             username,
@@ -18,10 +18,10 @@ export const createFakeMarkets = async (record) => {
             about: faker.lorem.paragraph(),
             description: faker.commerce.productDescription(),
             UserId: randomNumber(1, record),
-        });
+        })
     }
 
-    const markets = await Market.bulkCreate(fakeMarkets);
+    const markets = await Market.bulkCreate(fakeMarkets)
 
     /**
      * Loop through all markets and create a fake image for each one
@@ -29,7 +29,7 @@ export const createFakeMarkets = async (record) => {
      * Loop through all markets and create a fake category for each one
      */
     for (let marketIndex = 0; marketIndex < markets.length; marketIndex++) {
-        const market = markets[marketIndex];
+        const market = markets[marketIndex]
 
         /**
          * Create images for each market
@@ -39,11 +39,11 @@ export const createFakeMarkets = async (record) => {
             imageIndex < randomNumber(1, 3);
             imageIndex++
         ) {
-            const url = faker.image.imageUrl(1200, 800, "Business", true);
+            const url = faker.image.imageUrl(1200, 800, "Business", true)
             market.createImage({
                 public_id: faker.random.word(),
                 url,
-            });
+            })
         }
 
         /**
@@ -52,12 +52,12 @@ export const createFakeMarkets = async (record) => {
         await market.createAvatar({
             public_id: faker.random.word(),
             url: faker.image.imageUrl(128, 128, "business", true),
-        });
+        })
 
         /**
          * Add categorys to each market
          */
 
-        await market.addCategory(marketIndex + record);
+        await market.addCategory(marketIndex + record)
     }
-};
+}

@@ -1,32 +1,45 @@
-import { Router } from "express";
-import {
-    createUser,
-    deleteUser,
-    getUserById,
-    getUserByUsername,
-    getUsers,
-    updateUser,
-    updateUserEmail,
-    updateUserPassword,
-} from "../controllers/User.js";
-import {
-    isAdmin,
-    isAuth,
-    isEmailExist,
-    isGuest,
-    isUserAuth,
-    isUsernameTaken,
-} from "../middleware/Auth.js";
+import { Router } from "express"
+import { UserController } from "../controllers/index.js"
+import { AuthMiddleware } from "../middlewares/index.js"
 
-const router = Router();
+const router = Router()
 
-router.get("/", getUsers);
-router.get("/:id", getUserById);
-router.get("/username/:username", getUserByUsername);
-router.post("/", isAuth, isAdmin, isEmailExist, isUsernameTaken, createUser);
-router.put("/:id", isAuth, isUsernameTaken, isUserAuth, updateUser);
-router.put("/email/:id", isAuth, isEmailExist, isUserAuth, updateUserEmail);
-router.put("/password/:id", isAuth, isUserAuth, updateUserPassword);
-router.delete("/:id", isAuth, isUserAuth, deleteUser);
+router.get("/", UserController.getUsers)
+router.get("/:id", UserController.getUserById)
+router.get("/username/:username", UserController.getUserByUsername)
+router.post(
+    "/",
+    AuthMiddleware.isAuth,
+    AuthMiddleware.isAdmin,
+    AuthMiddleware.isEmailExist,
+    AuthMiddleware.isUsernameTaken,
+    UserController.create
+)
+router.put(
+    "/:id",
+    AuthMiddleware.isAuth,
+    AuthMiddleware.isUsernameTaken,
+    AuthMiddleware.isUserAuth,
+    UserController.update
+)
+router.put(
+    "/email/:id",
+    AuthMiddleware.isAuth,
+    AuthMiddleware.isEmailExist,
+    AuthMiddleware.isUserAuth,
+    UserController.updateEmail
+)
+router.put(
+    "/password/:id",
+    AuthMiddleware.isAuth,
+    AuthMiddleware.isUserAuth,
+    UserController.updatePassword
+)
+router.delete(
+    "/:id",
+    AuthMiddleware.isAuth,
+    AuthMiddleware.isUserAuth,
+    UserController.remove
+)
 
-export default router;
+export default router

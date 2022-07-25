@@ -1,24 +1,26 @@
-import { Router } from "express";
-import {
-    createReview,
-    deleteReview,
-    getReviewById,
-    getReviewByName,
-    getReviews,
-    getReviewsBySearch,
-    updateReview,
-} from "../controllers/Review.js";
-import { isAuth } from "../middleware/Auth.js";
-import { isReviewOwner, isReviewUsernameTaken } from "../middleware/Review.js";
+import { Router } from "express"
+import { ReviewController } from "../controllers/index.js"
+import { AuthMiddleware } from "../middlewares/index.js"
+import { ReviewMiddleware } from "../middlewares/index.js"
 
-const router = Router();
+const router = Router()
 
-router.get("/", getReviews);
-router.get("/:id", getReviewById);
-router.get("/q/:query", getReviewsBySearch);
-router.get("/name/:slug", getReviewByName);
-router.post("/", isAuth, createReview);
-router.put("/:id", isAuth, isReviewOwner, updateReview);
-router.delete("/:id", isAuth, isReviewOwner, deleteReview);
+router.get("/", ReviewController.getAll)
+router.get("/:id", ReviewController.getById)
+router.get("/q/:query", ReviewController.getAllBySearch)
+router.get("/name/:slug", ReviewController.getByName)
+router.post("/", AuthMiddleware.isAuth, ReviewController.createReview)
+router.put(
+    "/:id",
+    AuthMiddleware.isAuth,
+    ReviewMiddleware.isOwner,
+    ReviewController.updateReview
+)
+router.delete(
+    "/:id",
+    AuthMiddleware.isAuth,
+    ReviewMiddleware.isOwner,
+    ReviewController.deleteReview
+)
 
-export default router;
+export default router

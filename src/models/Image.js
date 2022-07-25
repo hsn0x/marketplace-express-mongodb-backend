@@ -6,45 +6,43 @@ const model = mongoose.model
 const schema = Schema(
     {
         public_id: {
-            type: STRING,
+            type: String,
         },
         version: {
-            type: STRING,
+            type: String,
         },
         signature: {
-            type: STRING,
+            type: String,
         },
         width: {
-            type: STRING,
+            type: String,
         },
         height: {
-            type: STRING,
+            type: String,
         },
         format: {
-            type: STRING,
+            type: String,
         },
         resource_type: {
-            type: STRING,
+            type: String,
         },
         created_at: {
-            type: STRING,
+            type: String,
         },
         bytes: {
-            type: STRING,
+            type: String,
         },
         type: {
-            type: STRING,
+            type: String,
         },
         url: {
-            type: TEXT,
+            type: String,
         },
         secure_url: {
-            type: STRING,
+            type: String,
         },
-        imageableId: { type: STRING },
-        imageableType: { type: STRING },
     },
     { timestamps: true }
 )
 
-export default model("Category", schema)
+export default model("Image", schema)

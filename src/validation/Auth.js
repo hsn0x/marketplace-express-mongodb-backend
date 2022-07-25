@@ -1,6 +1,6 @@
-import Ajv from "ajv";
+import Ajv from "ajv"
 
-const ajv = new Ajv();
+const ajv = new Ajv()
 
 const CreateRegisterSchema = {
     type: "object",
@@ -23,14 +23,16 @@ const CreateRegisterSchema = {
         "passwordSalt",
     ],
     additionalProperties: false,
-};
+}
 
-export const validateRegister = (registerData) => {
-    const valid = ajv.validate(CreateRegisterSchema, registerData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
+export default {
+    validateRegister: (registerData) => {
+        const valid = ajv.validate(CreateRegisterSchema, registerData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+}

@@ -1,26 +1,14 @@
 import { genPassword, passwordMatch } from "../lib/passwordUtils.js"
 import {} from "../lib/removeSensitiveData.js"
 import {
-    Market,
-    Product,
-    Image,
-    Avatar,
-    Role,
-    Student,
+    MarketModel,
+    ProductModel,
+    ImageModel,
+    AvatarModel,
+    RoleModel,
 } from "../models/index.js"
-import {
-    createUserQuery,
-    deleteUserQuery,
-    findAllUsersQuery,
-    findOneUserQuery,
-    updateUserQuery,
-} from "../queries/users.js"
-import {
-    validateCreateUser,
-    validateUpdateUserEmail,
-    validateUpdateUserPassword,
-    validateUpdateUser,
-} from "../validation/User.js"
+import { usersQueries } from "../queries/index.js"
+import { UserValidation } from "../validation/index.js"
 export default {
     getUsers: async (request, response) => {
         const users = await findAllUsersQuery(true)
@@ -67,7 +55,7 @@ export default {
         }
     },
 
-    createUser: async (request, response, next) => {
+    create: async (request, response, next) => {
         const {
             firstName,
             lastName,
@@ -94,7 +82,7 @@ export default {
         userData.passwordHash = hashedPassword.hash
         userData.passwordSalt = hashedPassword.salt
 
-        const isUserValid = validateCreateUser(userData)
+        const isUserValid = validatecreate(userData)
 
         if (!isUserValid.valid) {
             return response.status(401).json({
@@ -103,7 +91,7 @@ export default {
             })
         }
 
-        const user = await createUserQuery(userData)
+        const user = await createQuery(userData)
 
         if (user) {
             response.status(201).json({
@@ -117,7 +105,7 @@ export default {
         }
     },
 
-    updateUser: async (request, response) => {
+    update: async (request, response) => {
         const id = parseInt(request.params.id)
         const { session, user } = request
 
@@ -133,7 +121,7 @@ export default {
 
         userData.age = Number(userData.age)
 
-        const isUserValid = validateUpdateUser(userData)
+        const isUserValid = validateupdate(userData)
 
         if (!isUserValid.valid) {
             return response.status(401).json({
@@ -142,7 +130,7 @@ export default {
             })
         }
 
-        const updatedUser = await updateUserQuery(userData, { id })
+        const updatedUser = await updateQuery(userData, { id })
         if (updatedUser) {
             response.status(200).json({
                 message: `User updated with ID: ${user.id}`,
@@ -155,7 +143,7 @@ export default {
         }
     },
 
-    updateUserEmail: async (request, response) => {
+    updateEmail: async (request, response) => {
         const id = parseInt(request.params.id)
         const { session, user } = request
 
@@ -164,7 +152,7 @@ export default {
             email,
         }
 
-        const isUserValid = validateUpdateUserEmail(userData)
+        const isUserValid = validateupdateEmail(userData)
 
         if (!isUserValid.valid) {
             return response.status(401).json({
@@ -172,7 +160,7 @@ export default {
                 errors: isUserValid.errors,
             })
         }
-        const updatedUser = await updateUserQuery(userData, { id })
+        const updatedUser = await updateQuery(userData, { id })
         if (updatedUser) {
             response.status(200).json({
                 message: `User updated with ID: ${user.id}`,
@@ -185,7 +173,7 @@ export default {
         }
     },
 
-    updateUserPassword: async (request, response) => {
+    updatePassword: async (request, response) => {
         const id = parseInt(request.params.id)
         const { session, user } = request
         if (user.id !== id) {
@@ -210,7 +198,7 @@ export default {
         /**
          * Check if the current password is valid
          */
-        let isUserValid = validateUpdateUserPassword({
+        let isUserValid = validateupdatePassword({
             ...userData,
             passwordHash: currentUser.passwordHash,
             passwordSalt: currentUser.passwordSalt,
@@ -229,7 +217,7 @@ export default {
         /**
          * Check if the current password is valid
          */
-        isUserValid = validateUpdateUserPassword(userData)
+        isUserValid = validateupdatePassword(userData)
         if (!isUserValid.valid) {
             return response.status(401).json({
                 valid: isUserValid.valid,
@@ -253,7 +241,7 @@ export default {
         }
 
         userData.password = userData.newPassword
-        const updatedUser = await updateUserQuery(userData, { id })
+        const updatedUser = await updateQuery(userData, { id })
         if (updatedUser) {
             response.status(200).json({
                 message: `User updated with ID: ${user.id}`,
@@ -266,9 +254,9 @@ export default {
         }
     },
 
-    deleteUser: async (request, response) => {
+    remove: async (request, response) => {
         const id = parseInt(request.params.id)
-        await deleteUserQuery({ id })
+        await removeQuery({ id })
         response.status(200).json({ message: `User deleted with ID: ${id}` })
     },
 }

@@ -1,27 +1,19 @@
-import { isLikeExist } from "../middleware/Like.js"
+import { LikeMiddleware } from "../middlewares/index.js"
 import Product from "../models/Product.js"
-import {
-    createLikeQuery,
-    deleteLikeQuery,
-    findAllLikesQuery,
-    findOneLikeQuery,
-    updateLikeQuery,
-    findAllLikesBySearchQuery,
-    findByPkLikeQuery,
-} from "../queries/likes.js"
-import { findByPkProductQuery } from "../queries/products.js"
-import { validateCreateLike, validateUpdateLike } from "../validation/Like.js"
+import { likesQueries } from "../queries/index.js"
+import { productsQueries } from "../queries/index.js"
+import { LikeValidation } from "../validation/index.js"
 
 export default {
-    getLikes: async (request, response) => {
-        const likes = await findAllLikesQuery()
+    getAll: async (request, response) => {
+        const likes = await findAllQuery()
         if (likes) {
             response.status(200).json({ likes })
         } else {
             response.status(404).json({ message: `Likes not found` })
         }
     },
-    getLikesBySearch: async (request, response) => {
+    getAllBySearch: async (request, response) => {
         const query = request.params.query
 
         const likes = await findAllLikesBySearchQuery({ query })
@@ -37,9 +29,9 @@ export default {
                 .json({ message: `Like not found with Query: ${query}` })
         }
     },
-    getLikeById: async (request, response) => {
+    getById: async (request, response) => {
         const id = parseInt(request.params.id)
-        const like = await findOneLikeQuery({ id })
+        const like = await findOneQuery({ id })
         if (like) {
             response.status(200).json({ like })
         } else {
@@ -48,9 +40,9 @@ export default {
                 .json({ message: `Like not found with ID: ${id}` })
         }
     },
-    getLikeBySlug: async (request, response) => {
+    getBySlug: async (request, response) => {
         const slug = request.params.slug
-        const like = await findOneLikeQuery({ slug })
+        const like = await findOneQuery({ slug })
         if (like) {
             response.status(200).json({ like })
         } else {
@@ -59,7 +51,7 @@ export default {
                 .json({ message: `Like not found with Slug: ${slug}` })
         }
     },
-    createLike: async (request, response, next) => {
+    create: async (request, response, next) => {
         const { session, user } = request
         const { ProductId } = request.body
         const likeData = {
@@ -75,9 +67,9 @@ export default {
         //         errors: isLikeValid.errors,
         //     });
         // }
-        // const product = await findByPkProductQuery(likeData.ProductId);
+        // const product = await findByPkQuery(likeData.ProductId);
 
-        const createdLike = await createLikeQuery(likeData)
+        const createdLike = await createQuery(likeData)
 
         if (createdLike) {
             return response.status(201).json({
@@ -90,17 +82,17 @@ export default {
                 .json({ message: `Faile to create a like` })
         }
     },
-    updateLike: async (request, response, next) => {
-        const x = await isLikeExist(request, response, next)
+    update: async (request, response, next) => {
+        const x = await isExist(request, response, next)
         if (!x) {
-            await createLike(request, response)
+            await create(request, response)
         } else {
-            await deleteLike(request, response)
+            await remove(request, response)
         }
     },
-    deleteLike: async (request, response) => {
+    remove: async (request, response) => {
         const id = parseInt(request.params.id)
-        await deleteLikeQuery({ id })
+        await removeQuery({ id })
         return response
             .status(200)
             .json({ message: `Like deleted with ID: ${id}` })

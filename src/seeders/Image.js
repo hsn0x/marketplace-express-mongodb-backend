@@ -1,25 +1,24 @@
-import { faker } from "@faker-js/faker";
-import { Image, Product } from "../models/index.js";
-import { cloudinary } from "../db/cloudinary.js";
+import { faker } from "@faker-js/faker"
+import { ImageModel } from "../models/index.js"
 
 export const createFakeImages = async (record) => {
-    const fakeImages = [];
+    const fakeImages = []
     for (let index = 0; index < record; index++) {
         fakeImages.push({
             url: faker.image.imageUrl(),
-        });
+        })
     }
 
-    await Image.bulkCreate(fakeImages);
+    await Image.bulkCreate(fakeImages)
     const image = await Image.create({
         url: "https://placekitten.com/408/287",
-    });
-    const comment = await image.createComment({
+    })
+    const comment = await image.create({
         title: "Awesome!",
         content: "Awesome!",
-    });
+    })
 
-    console.log(comment.commentableId === image.id); // true
+    console.log(comment.commentableId === image.id) // true
 
-    console.log(comment.commentableType); // "Image"
-};
+    console.log(comment.commentableType) // "Image"
+}

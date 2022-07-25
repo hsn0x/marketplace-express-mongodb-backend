@@ -1,4 +1,4 @@
-import { Permission } from "../models/index.js"
+import { PermissionModel } from "../models/index.js"
 
 export default {
     findAllQuery: async (populate = [], salt = []) => {

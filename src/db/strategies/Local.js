@@ -1,7 +1,7 @@
 import { Strategy as LocalStrategy } from "passport-local"
 import { passwordMatch } from "../../lib/passwordUtils.js"
-import { User } from "../../models/index.js"
-import { findOneUserQuery } from "../../queries/users.js"
+import { UserModel } from "../../models/index.js"
+import { usersQueries } from "../../queries/index.js"
 
 const customFields = {
     usernameField: "email",
@@ -37,6 +37,4 @@ const verifyCallback = async (email, password, done) => {
     }
 }
 
-export default {
-    localStrategy: new LocalStrategy(customFields, verifyCallback),
-}
+export default new LocalStrategy(customFields, verifyCallback)

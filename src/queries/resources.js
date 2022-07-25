@@ -1,4 +1,4 @@
-import { Resource } from "../models/index.js"
+import { ResourceModel } from "../models/index.js"
 
 export default {
     findAllQuery: async (populate = [], salt = []) => {

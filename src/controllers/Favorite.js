@@ -1,30 +1,19 @@
-import { isFavoriteExist } from "../middleware/Favorite.js"
+import { FavoriteMiddleware } from "../middlewares/index.js"
 import Product from "../models/Product.js"
-import {
-    createFavoriteQuery,
-    deleteFavoriteQuery,
-    findAllFavoritesQuery,
-    findOneFavoriteQuery,
-    updateFavoriteQuery,
-    findAllFavoritesBySearchQuery,
-    findByPkFavoriteQuery,
-} from "../queries/favorites.js"
-import { findByPkProductQuery } from "../queries/products.js"
-import {
-    validateCreateFavorite,
-    validateUpdateFavorite,
-} from "../validation/Favorite.js"
+import { favoritesQueries } from "../queries/index.js"
+import { productsQueries } from "../queries/index.js"
+import { FavoriteValidation } from "../validation/index.js"
 
 export default {
-    getFavorites: async (request, response) => {
-        const favorites = await findAllFavoritesQuery()
+    getAll: async (request, response) => {
+        const favorites = await findAllQuery()
         if (favorites) {
             response.status(200).json({ favorites })
         } else {
             response.status(404).json({ message: `Favorites not found` })
         }
     },
-    getFavoritesBySearch: async (request, response) => {
+    getAllBySearch: async (request, response) => {
         const query = request.params.query
 
         const favorites = await findAllFavoritesBySearchQuery({ query })
@@ -41,9 +30,9 @@ export default {
         }
     },
 
-    getFavoriteById: async (request, response) => {
+    getById: async (request, response) => {
         const id = parseInt(request.params.id)
-        const favorite = await findOneFavoriteQuery({ id })
+        const favorite = await findOneQuery({ id })
         if (favorite) {
             response.status(200).json({ favorite })
         } else {
@@ -52,9 +41,9 @@ export default {
                 .json({ message: `Favorite not found with ID: ${id}` })
         }
     },
-    getFavoriteBySlug: async (request, response) => {
+    getBySlug: async (request, response) => {
         const slug = request.params.slug
-        const favorite = await findOneFavoriteQuery({ slug })
+        const favorite = await findOneQuery({ slug })
         if (favorite) {
             response.status(200).json({ favorite })
         } else {
@@ -63,7 +52,7 @@ export default {
                 .json({ message: `Favorite not found with Slug: ${slug}` })
         }
     },
-    createFavorite: async (request, response, next) => {
+    create: async (request, response, next) => {
         const { session, user } = request
         const { ProductId } = request.body
         const favoriteData = {
@@ -79,9 +68,9 @@ export default {
         //         errors: isFavoriteValid.errors,
         //     });
         // }
-        // const product = await findByPkProductQuery(favoriteData.ProductId);
+        // const product = await findByPkQuery(favoriteData.ProductId);
 
-        const createdFavorite = await createFavoriteQuery(favoriteData)
+        const createdFavorite = await favorites.createQuery(favoriteData)
 
         if (createdFavorite) {
             return response.status(201).json({
@@ -94,18 +83,18 @@ export default {
                 .json({ message: `Faile to create a favorite` })
         }
     },
-    updateFavorite: async (request, response, next) => {
-        const x = await isFavoriteExist(request, response, next)
+    update: async (request, response, next) => {
+        const x = await isExist(request, response, next)
         console.log({ x })
         if (!x) {
-            await createFavorite(request, response)
+            await create(request, response)
         } else {
-            await deleteFavorite(request, response)
+            await remove(request, response)
         }
     },
-    deleteFavorite: async (request, response) => {
+    remove: async (request, response) => {
         const id = parseInt(request.params.id)
-        await deleteFavoriteQuery({ id })
+        await deleteQuery({ id })
         return response
             .status(200)
             .json({ message: `Favorite deleted with ID: ${id}` })

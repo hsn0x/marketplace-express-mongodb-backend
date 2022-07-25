@@ -1,18 +1,8 @@
-import {
-    createCommentQuery,
-    deleteCommentQuery,
-    findAllCommentsBySearchQuery,
-    findAllCommentsQuery,
-    findOneCommentQuery,
-    updateCommentQuery,
-} from "../queries/comments.js"
-import {
-    validateCreateComment,
-    validateUpdateComment,
-} from "../validation/Comment.js"
+import { commentsQueries } from "../queries/index.js"
+import { CommentValidation } from "../validation/index.js"
 
 export default {
-    getComments: async (request, response) => {
+    getAll: async (request, response) => {
         const comments = await findAllCommentsQuery()
         if (comments) {
             response.status(200).json({
@@ -23,7 +13,7 @@ export default {
             response.status(404).json({ message: "No comments found" })
         }
     },
-    getCommentsBySearch: async (request, response) => {
+    getAllBySearch: async (request, response) => {
         const query = request.params.query
 
         const comments = await findAllCommentsBySearchQuery({ query })
@@ -39,9 +29,9 @@ export default {
                 .json({ message: `Comment not found with Query: ${query}` })
         }
     },
-    getCommentById: async (request, response) => {
+    getById: async (request, response) => {
         const id = parseInt(request.params.id)
-        const comment = await findOneCommentQuery({ id })
+        const comment = await findOneQuery({ id })
         if (comment) {
             response.status(200).json({
                 message: `Comment found with ID: ${id}`,
@@ -53,9 +43,9 @@ export default {
             })
         }
     },
-    getCommentByName: async (request, response) => {
+    getByName: async (request, response) => {
         const slug = request.params.slug
-        const comment = await findOneCommentQuery({ slug })
+        const comment = await findOneQuery({ slug })
         if (comment) {
             response.status(200).json({
                 message: `Comment found with ID: ${slug}`,
@@ -67,7 +57,7 @@ export default {
             })
         }
     },
-    createComment: async (request, response) => {
+    create: async (request, response) => {
         const { session, user } = request
 
         const { title, content, productId } = request.body
@@ -87,7 +77,7 @@ export default {
             })
         }
 
-        const createdComment = await createCommentQuery(commentData)
+        const createdComment = await createQuery(commentData)
 
         if (createdComment) {
             return response.status(201).json({
@@ -100,7 +90,7 @@ export default {
                 .json({ message: `Faile to create a comment` })
         }
     },
-    updateComment: async (request, response) => {
+    update: async (request, response) => {
         const id = parseInt(request.params.id)
         const { session, user } = request
 
@@ -123,7 +113,7 @@ export default {
             response.status(400).json({ message: "Comment not updated" })
         }
 
-        const updatedComment = await updateCommentQuery(commentData, { id })
+        const updatedComment = await updateQuery(commentData, { id })
 
         if (updatedComment) {
             response.status(200).json({
@@ -136,9 +126,9 @@ export default {
             })
         }
     },
-    deleteComment: async (request, response) => {
+    remove: async (request, response) => {
         const id = parseInt(request.params.id)
-        await deleteCommentQuery({ id })
+        await removeQuery({ id })
         response.status(200).json({ message: `Comment deleted with ID: ${id}` })
     },
 }

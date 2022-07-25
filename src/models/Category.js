@@ -16,7 +16,7 @@ const schema = Schema(
             type: String,
         },
         parentId: {
-            type: INTEGER,
+            type: Number,
         },
         type: {
             type: String,

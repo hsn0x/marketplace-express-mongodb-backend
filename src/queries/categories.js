@@ -1,7 +1,7 @@
-import { Category } from "../scopes/index.js"
+import { CategoryModel } from "../models/index.js"
 
 export default {
-    findAllCategoriesQuery: async () => {
+    findAllQuery: async () => {
         const categories = await Category.scope("withAssociations").findAll()
         return categories
     },
@@ -21,16 +21,16 @@ export default {
         })
         return category
     },
-    createCategoryQuery: async (categoryData) => {
+    createQuery: async (categoryData) => {
         const createdCategory = await Category.create(categoryData)
         return createdCategory
     },
 
-    updateCategoryQuery: async (categoryData, where) => {
+    updateQuery: async (categoryData, where) => {
         const updatedCategory = await Category.update(categoryData, { where })
         return updatedCategory
     },
-    deleteCategoryQuery: async (id) => {
+    removeQuery: async (id) => {
         const deletedCategory = await Category.destroy({
             where: id,
         })

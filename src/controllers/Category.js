@@ -1,20 +1,10 @@
-import {
-    createCategoryQuery,
-    deleteCategoryQuery,
-    findAllCategoriesQuery,
-    findAllCategoriesWhereQuery,
-    findOneCategoryQuery,
-    updateCategoryQuery,
-} from "../queries/categories.js"
+import { categoriesQueries } from "../queries/index.js"
 
-import {
-    validateCreateCategory,
-    validateUpdateCategory,
-} from "../validation/Category.js"
+import { CategoryValidation } from "../validation/index.js"
 
 export default {
     getCategories: async (request, response) => {
-        const categories = await findAllCategoriesQuery()
+        const categories = await findAllQuery()
         if (categories) {
             response.status(200).json({
                 message: `Categories found`,
@@ -66,7 +56,7 @@ export default {
             })
         }
     },
-    createCategory: async (request, response) => {
+    create: async (request, response) => {
         const { session, user } = request
         const parentId = parseInt(request.body.parentId)
 
@@ -88,7 +78,7 @@ export default {
             })
         }
 
-        const createdCategory = await createCategoryQuery(categoryData)
+        const createdCategory = await createQuery(categoryData)
 
         if (createdCategory) {
             return response.status(201).json({
@@ -101,7 +91,7 @@ export default {
                 .json({ message: `Faile to create a category` })
         }
     },
-    updateCategory: async (request, response) => {
+    update: async (request, response) => {
         const id = parseInt(request.params.id)
         const { name, username, about, title } = request.body
 
@@ -118,7 +108,7 @@ export default {
             response.status(400).json({ message: "Category not updated" })
         }
 
-        const updatedCategory = await updateCategoryQuery(categoryData, { id })
+        const updatedCategory = await updateQuery(categoryData, { id })
 
         if (updatedCategory) {
             response.status(200).json({
@@ -131,9 +121,9 @@ export default {
             })
         }
     },
-    deleteCategory: async (request, response) => {
+    remove: async (request, response) => {
         const id = parseInt(request.params.id)
-        await deleteCategoryQuery({ id })
+        await removeQuery({ id })
         response
             .status(200)
             .json({ message: `Category deleted with ID: ${id}` })

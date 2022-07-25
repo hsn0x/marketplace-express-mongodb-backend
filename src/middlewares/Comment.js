@@ -1,14 +1,14 @@
-import { findOneCommentQuery } from "../queries/comments.js"
+import { commentsQueries } from "../queries/index.js"
 export default {
-    isCommentUsernameTaken: async (req, res, next) => {
+    isUsernameTaken: async (req, res, next) => {
         const { username } = req.body
 
         if (!username) {
             return res.status(400).json({ message: "Username is required" })
         }
 
-        const isCommentUsernameTaken = await findOneCommentQuery({ username })
-        if (isCommentUsernameTaken) {
+        const isUsernameTaken = await findOneQuery({ username })
+        if (isUsernameTaken) {
             return res.status(401).json({
                 message: `Username ${username} is already taken`,
             })
@@ -17,7 +17,7 @@ export default {
         }
     },
 
-    isCommentOwner: async (req, res, next) => {
+    isOwner: async (req, res, next) => {
         const id = parseInt(req.params.id)
         const { session, user } = req
 
@@ -27,11 +27,9 @@ export default {
             })
         }
 
-        const isCommentOwner = user.Comments.find(
-            (comment) => comment.id === id
-        )
+        const isOwner = user.Comments.find((comment) => comment.id === id)
 
-        if (isCommentOwner) {
+        if (isOwner) {
             return next()
         } else {
             return res.status(401).json({

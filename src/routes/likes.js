@@ -1,20 +1,19 @@
-import { Router } from "express";
-import {
-    createLike,
-    deleteLike,
-    getLikeById,
-    getLikes,
-    updateLike,
-} from "../controllers/Like.js";
-import { isAuth } from "../middleware/Auth.js";
-import { isLikeExist, isLikeOwner } from "../middleware/Like.js";
+import { Router } from "express"
+import { LikeController } from "../controllers/index.js"
+import { AuthMiddleware } from "../middlewares/index.js"
+import { LikeMiddleware } from "../middlewares/index.js"
 
-const router = Router();
+const router = Router()
 
-router.get("/", getLikes);
-router.get("/:id", getLikeById);
-router.post("/", isAuth, createLike);
-router.put("/", isAuth, updateLike);
-router.delete("/:id", isAuth, isLikeOwner, deleteLike);
+router.get("/", LikeController.getAll)
+router.get("/:id", LikeController.getById)
+router.post("/", AuthMiddleware.isAuth, LikeController.create)
+router.put("/", AuthMiddleware.isAuth, LikeController.update)
+router.delete(
+    "/:id",
+    AuthMiddleware.isAuth,
+    LikeMiddleware.isOwner,
+    LikeController.remove
+)
 
-export default router;
+export default router

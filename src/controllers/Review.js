@@ -1,18 +1,8 @@
-import {
-    createReviewQuery,
-    deleteReviewQuery,
-    findAllReviewsBySearchQuery,
-    findAllReviewsQuery,
-    findOneReviewQuery,
-    updateReviewQuery,
-} from "../queries/reviews.js"
-import {
-    validateCreateReview,
-    validateUpdateReview,
-} from "../validation/Review.js"
+import { reviewsQueries } from "../queries/index.js"
+import { ReviewValidation } from "../validation/index.js"
 export default {
-    getReviews: async (request, response) => {
-        const reviews = await findAllReviewsQuery()
+    getAll: async (request, response) => {
+        const reviews = await findAllQuery()
         if (reviews) {
             response.status(200).json({
                 message: `Reviews found`,
@@ -22,7 +12,7 @@ export default {
             response.status(404).json({ message: "No reviews found" })
         }
     },
-    getReviewsBySearch: async (request, response) => {
+    getAllBySearch: async (request, response) => {
         const query = request.params.query
 
         const reviews = await findAllReviewsBySearchQuery({ query })
@@ -38,7 +28,7 @@ export default {
                 .json({ message: `Review not found with Query: ${query}` })
         }
     },
-    getReviewById: async (request, response) => {
+    getById: async (request, response) => {
         const id = parseInt(request.params.id)
         const review = await findOneReviewQuery({ id })
         if (review) {
@@ -52,7 +42,7 @@ export default {
             })
         }
     },
-    getReviewByName: async (request, response) => {
+    getByName: async (request, response) => {
         const slug = request.params.slug
         const review = await findOneReviewQuery({ slug })
         if (review) {

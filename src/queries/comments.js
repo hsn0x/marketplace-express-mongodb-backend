@@ -1,6 +1,5 @@
-import { Op } from "sequelize"
-import { Comment, Product } from "../scopes/index.js"
-import { findByPkProductQuery } from "./products.js"
+import { CommentModel } from "../models/index.js"
+import { productsQueries } from "./index.js"
 
 export default {
     findAllCommentsQuery: async () => {
@@ -21,30 +20,30 @@ export default {
         })
         return comment
     },
-    findByPkCommentQuery: async (id) => {
+    findByPkQuery: async (id) => {
         const comment = await Comment.scope("withAssociations").findByPk(id)
         return comment
     },
-    findOneCommentQuery: async (where) => {
+    findOneQuery: async (where) => {
         const comment = await Comment.scope("withAssociations").findOne({
             where,
         })
         return comment
     },
-    createCommentQuery: async (commentData) => {
-        const product = await findByPkProductQuery(commentData.productId)
-        const createdComment = await product.createComment(commentData)
-        const comment = await findByPkCommentQuery(createdComment.id)
+    createQuery: async (commentData) => {
+        const product = await findByPkQuery(commentData.productId)
+        const createdComment = await product.create(commentData)
+        const comment = await findByPkQuery(createdComment.id)
         return comment
     },
-    updateCommentQuery: async (commentData, where) => {
+    updateQuery: async (commentData, where) => {
         await Comment.update(commentData, { where })
         const updatedComment = await Comment.scope("withAssociations").findOne({
             where,
         })
         return updatedComment
     },
-    deleteCommentQuery: async (where) => {
+    removeQuery: async (where) => {
         const deletedComment = await Comment.destroy({
             where,
         })

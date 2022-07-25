@@ -1,20 +1,19 @@
-import { Router } from "express";
-import {
-    createFavorite,
-    deleteFavorite,
-    getFavoriteById,
-    getFavorites,
-    updateFavorite,
-} from "../controllers/Favorite.js";
-import { isAuth } from "../middleware/Auth.js";
-import { isFavoriteExist, isFavoriteOwner } from "../middleware/Favorite.js";
+import { Router } from "express"
+import { FavoriteController } from "../controllers/index.js"
+import { AuthMiddleware } from "../middlewares/index.js"
+import { FavoriteMiddleware } from "../middlewares/index.js"
 
-const router = Router();
+const router = Router()
 
-router.get("/", getFavorites);
-router.get("/:id", getFavoriteById);
-router.post("/", isAuth, createFavorite);
-router.put("/", isAuth, updateFavorite);
-router.delete("/:id", isAuth, isFavoriteOwner, deleteFavorite);
+router.get("/", FavoriteController.getAll)
+router.get("/:id", FavoriteController.getById)
+router.post("/", AuthMiddleware.isAuth, FavoriteController.create)
+router.put("/", AuthMiddleware.isAuth, FavoriteController.update)
+router.delete(
+    "/:id",
+    AuthMiddleware.isAuth,
+    FavoriteMiddleware.isOwner,
+    FavoriteController.remove
+)
 
-export default router;
+export default router

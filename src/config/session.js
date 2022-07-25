@@ -8,6 +8,6 @@ export default {
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
         secure: process.env.NODE_ENV !== "development", // cookie only works over https in production
         httpOnly: true, // only works over http in production
-        sameSite: "strict", // prevents cross-site scripting
+        sameSite: "none", // prevents cross-site scripting
     },
-};
+}

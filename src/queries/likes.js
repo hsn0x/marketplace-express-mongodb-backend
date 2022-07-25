@@ -1,8 +1,7 @@
-import { Op } from "sequelize"
-import { Like, Product } from "../scopes/index.js"
-import { findByPkProductQuery } from "./products.js"
+import { LikeModel } from "../models/index.js"
+import { productsQueries } from "./index.js"
 export default {
-    findAllLikesQuery: async () => {
+    findAllQuery: async () => {
         const likes = await Like.scope("withAssociations").findAll()
         return likes
     },
@@ -20,27 +19,27 @@ export default {
         })
         return like
     },
-    findByPkLikeQuery: async (id) => {
+    findByPkQuery: async (id) => {
         const like = await Like.scope("withAssociations").findByPk(id)
         return like
     },
-    findOneLikeQuery: async (where) => {
+    findOneQuery: async (where) => {
         const like = await Like.scope("withAssociations").findOne({ where })
         return like
     },
 
-    createLikeQuery: async (likeData) => {
-        const product = await findByPkProductQuery(likeData.ProductId)
+    createQuery: async (likeData) => {
+        const product = await findByPkQuery(likeData.ProductId)
 
-        const createdLike = await product.createLike({
+        const createdLike = await product.create({
             UserId: likeData.UserId,
         })
         return createdLike
     },
 
-    updateLikeQuery: async (likeData, where) => {},
+    updateQuery: async (likeData, where) => {},
 
-    deleteLikeQuery: async (where) => {
+    removeQuery: async (where) => {
         const deletedLike = await Like.destroy({
             where,
         })

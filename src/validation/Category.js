@@ -1,6 +1,6 @@
-import Ajv from "ajv";
+import Ajv from "ajv"
 
-const ajv = new Ajv();
+const ajv = new Ajv()
 
 const CreateCategorySchema = {
     type: "object",
@@ -13,7 +13,7 @@ const CreateCategorySchema = {
     },
     required: ["name", "parentId", "type", "UserId"],
     additionalProperties: false,
-};
+}
 
 const UpdateCategorySchema = {
     type: "object",
@@ -26,23 +26,24 @@ const UpdateCategorySchema = {
     },
     required: ["name", "type", "parentId", "UserId"],
     additionalProperties: false,
-};
-
-export const validateCreateCategory = (categoryData) => {
-    const valid = ajv.validate(CreateCategorySchema, categoryData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
-export const validateUpdateCategory = (categoryData) => {
-    const valid = ajv.validate(UpdateCategorySchema, categoryData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
+}
+export default {
+    validateCreateCategory: (categoryData) => {
+        const valid = ajv.validate(CreateCategorySchema, categoryData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+    validateUpdateCategory: (categoryData) => {
+        const valid = ajv.validate(UpdateCategorySchema, categoryData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+}

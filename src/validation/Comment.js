@@ -1,6 +1,6 @@
-import Ajv from "ajv";
+import Ajv from "ajv"
 
-const ajv = new Ajv();
+const ajv = new Ajv()
 
 const CreateCommentSchema = {
     type: "object",
@@ -12,7 +12,7 @@ const CreateCommentSchema = {
     },
     required: ["title", "content", "productId", "UserId"],
     additionalProperties: false,
-};
+}
 
 const UpdateCommentSchema = {
     type: "object",
@@ -24,23 +24,25 @@ const UpdateCommentSchema = {
     },
     required: ["title", "content", "productId", "UserId"],
     additionalProperties: false,
-};
+}
 
-export const validateCreateComment = (commentData) => {
-    const valid = ajv.validate(CreateCommentSchema, commentData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
-export const validateUpdateComment = (commentData) => {
-    const valid = ajv.validate(UpdateCommentSchema, commentData);
-    if (!valid)
-        return {
-            valid,
-            errors: ajv.errors,
-        };
-    return { valid };
-};
+export default {
+    validateCreateComment: (commentData) => {
+        const valid = ajv.validate(CreateCommentSchema, commentData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+    validateUpdateComment: (commentData) => {
+        const valid = ajv.validate(UpdateCommentSchema, commentData)
+        if (!valid)
+            return {
+                valid,
+                errors: ajv.errors,
+            }
+        return { valid }
+    },
+}

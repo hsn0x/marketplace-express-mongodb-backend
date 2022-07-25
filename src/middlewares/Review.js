@@ -1,15 +1,15 @@
-import { findOneReviewQuery } from "../queries/reviews.js"
+import { reviewsQueries } from "../queries/index.js"
 
 export default {
-    isReviewUsernameTaken: async (req, res, next) => {
+    isUsernameTaken: async (req, res, next) => {
         const { username } = req.body
 
         if (!username) {
             return res.status(400).json({ message: "Username is required" })
         }
 
-        const isReviewUsernameTaken = await findOneReviewQuery({ username })
-        if (isReviewUsernameTaken) {
+        const isUsernameTaken = await findOneReviewQuery({ username })
+        if (isUsernameTaken) {
             return res.status(401).json({
                 message: `Username ${username} is already taken`,
             })
@@ -18,7 +18,7 @@ export default {
         }
     },
 
-    isReviewOwner: async (req, res, next) => {
+    isOwner: async (req, res, next) => {
         const id = parseInt(req.params.id)
         const { session, user } = req
 
@@ -28,9 +28,9 @@ export default {
             })
         }
 
-        const isReviewOwner = user.Reviews.find((review) => review.id === id)
+        const isOwner = user.Reviews.find((review) => review.id === id)
 
-        if (isReviewOwner) {
+        if (isOwner) {
             return next()
         } else {
             return res.status(401).json({

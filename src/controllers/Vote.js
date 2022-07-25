@@ -1,27 +1,18 @@
-import { isVoteExist } from "../middleware/Vote.js"
-import Product from "../models/Product.js"
-import {
-    createVoteQuery,
-    deleteVoteQuery,
-    findAllVotesQuery,
-    findOneVoteQuery,
-    updateVoteQuery,
-    findAllVotesBySearchQuery,
-    findByPkVoteQuery,
-} from "../queries/votes.js"
-import { findByPkProductQuery } from "../queries/products.js"
-import { validateCreateVote, validateUpdateVote } from "../validation/Vote.js"
+import { VoteMiddleware } from "../middlewares/index.js"
+import { ProductModel } from "../models/index.js"
+import { votesQueries, productsQueries } from "../queries/index.js"
+import { VoteValidation } from "../validation/index.js"
 
 export default {
-    getVotes: async (request, response) => {
-        const votes = await findAllVotesQuery()
+    getAll: async (request, response) => {
+        const votes = await findAllQuery()
         if (votes) {
             response.status(200).json({ votes })
         } else {
             response.status(404).json({ message: `Votes not found` })
         }
     },
-    getVotesBySearch: async (request, response) => {
+    getAllBySearch: async (request, response) => {
         const query = request.params.query
 
         const votes = await findAllVotesBySearchQuery({ query })
@@ -38,9 +29,9 @@ export default {
         }
     },
 
-    getVoteById: async (request, response) => {
+    getById: async (request, response) => {
         const id = parseInt(request.params.id)
-        const vote = await findOneVoteQuery({ id })
+        const vote = await findOneQuery({ id })
         if (vote) {
             response.status(200).json({ vote })
         } else {
@@ -49,9 +40,9 @@ export default {
                 .json({ message: `Vote not found with ID: ${id}` })
         }
     },
-    getVoteBySlug: async (request, response) => {
+    getBySlug: async (request, response) => {
         const slug = request.params.slug
-        const vote = await findOneVoteQuery({ slug })
+        const vote = await findOneQuery({ slug })
         if (vote) {
             response.status(200).json({ vote })
         } else {
@@ -60,7 +51,7 @@ export default {
                 .json({ message: `Vote not found with Slug: ${slug}` })
         }
     },
-    createVote: async (request, response, next) => {
+    create: async (request, response, next) => {
         const { session, user } = request
         const { ProductId } = request.body
         const voteData = {
@@ -76,9 +67,9 @@ export default {
         //         errors: isVoteValid.errors,
         //     });
         // }
-        // const product = await findByPkProductQuery(voteData.ProductId);
+        // const product = await findByPkQuery(voteData.ProductId);
 
-        const createdVote = await createVoteQuery(voteData)
+        const createdVote = await createQuery(voteData)
 
         if (createdVote) {
             return response.status(201).json({
@@ -91,18 +82,18 @@ export default {
                 .json({ message: `Faile to create a vote` })
         }
     },
-    updateVote: async (request, response, next) => {
-        const x = await isVoteExist(request, response, next)
+    update: async (request, response, next) => {
+        const x = await isExist(request, response, next)
         console.log({ x })
         if (!x) {
-            await createVote(request, response)
+            await create(request, response)
         } else {
-            await deleteVote(request, response)
+            await remove(request, response)
         }
     },
-    deleteVote: async (request, response) => {
+    remove: async (request, response) => {
         const id = parseInt(request.params.id)
-        await deleteVoteQuery({ id })
+        await removeQuery({ id })
         return response
             .status(200)
             .json({ message: `Vote deleted with ID: ${id}` })

@@ -1,7 +1,7 @@
-import { findOneCategoryQuery } from "../queries/categories.js"
+import { categoriesQueries } from "../queries/index.js"
 
 export default {
-    isCategoryExist: async (req, res, next) => {
+    isExist: async (req, res, next) => {
         const id = parseInt(req.params.id)
         const category = await findOneCategoryQuery({ id })
         if (category) {
@@ -13,7 +13,7 @@ export default {
         }
     },
 
-    isCategoryNameExist: async (req, res, next) => {
+    isNameExist: async (req, res, next) => {
         const name = req.params.name
         const category = await findOneCategoryQuery({ name })
         if (category) {

@@ -1,10 +1,8 @@
-import { Op } from "sequelize"
-import { Product } from "../scopes/index.js"
-import { Category } from "../models/index.js"
+import { ProductModel, CategoryModel } from "../models/index.js"
 import { getPagination, getPagingData } from "../lib/handlePagination.js"
 
 export default {
-    findAllProductsQuery: async ({ page, size }) => {
+    findAllQuery: async ({ page, size }) => {
         const { limit, offset } = getPagination(page, size)
 
         const products = await Product.scope("withAssociations").findAll({
@@ -25,11 +23,11 @@ export default {
             rows: products,
         }
     },
-    findByPkProductQuery: async (id) => {
+    findByPkQuery: async (id) => {
         const product = await Product.scope("withAssociations").findByPk(id)
         return product
     },
-    findOneProductQuery: async (where) => {
+    findOneQuery: async (where) => {
         const product = await Product.scope("withAssociations").findOne({
             where,
         })
@@ -88,7 +86,7 @@ export default {
         })
         return products
     },
-    createProductQuery: async (productData) => {
+    createQuery: async (productData) => {
         const createdProduct = await Product.create(productData)
         console.log(createdProduct.id)
         productData.CategoriesIds.map(
@@ -96,7 +94,7 @@ export default {
         )
         return createdProduct
     },
-    updateProductQuery: async (productData, where) => {
+    updateQuery: async (productData, where) => {
         await Product.update(productData, { where })
         const updatedProduct = await Product.scope("withAssociations").findOne({
             where,
@@ -110,7 +108,7 @@ export default {
 
         return updatedProduct
     },
-    deleteProductQuery: async (where) => {
+    deleteQuery: async (where) => {
         const deletedProduct = await Product.destroy({
             where,
         })

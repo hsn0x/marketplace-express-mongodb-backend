@@ -1,8 +1,8 @@
 import { Op } from "sequelize"
-import { Market } from "../scopes/index.js"
+import { MarketModel } from "../models/index.js"
 
 export default {
-    findAllMarketsQuery: async () => {
+    findAllQuery: async () => {
         const markets = await Market.scope("withAssociations").findAll()
         return markets
     },
@@ -20,22 +20,22 @@ export default {
         })
         return market
     },
-    findByPkMarketQuery: async (id) => {
+    findByPkQuery: async (id) => {
         const market = await Market.scope("withAssociations").findByPk(id)
         return market
     },
-    findOneMarketQuery: async (where) => {
+    findOneQuery: async (where) => {
         const market = await Market.scope("withAssociations").findOne({ where })
         return market
     },
-    createMarketQuery: async (marketData) => {
+    createQuery: async (marketData) => {
         const createdMarket = await Market.create(marketData)
         marketData.CategoriesIds.map(
             async (ci) => await createdMarket.addCategory(ci)
         )
         return createdMarket
     },
-    updateMarketQuery: async (marketData, where) => {
+    updateQuery: async (marketData, where) => {
         await Market.update(marketData, { where })
         const updatedMarket = await Market.scope("withAssociations").findOne({
             where,
@@ -48,7 +48,7 @@ export default {
         )
         return updatedMarket
     },
-    deleteMarketQuery: async (where) => {
+    removeQuery: async (where) => {
         const deletedMarket = await Market.destroy({
             where,
         })

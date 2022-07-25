@@ -1,9 +1,8 @@
-import Like from "../models/Like.js"
-import Product from "../models/Product.js"
-import { findOneLikeQuery } from "../queries/likes.js"
+import { LikeModel, ProductModel } from "../models/index.js"
+import { likesQueries } from "../queries/index.js"
 
 export default {
-    isLikeExist: async (req, res, next) => {
+    isExist: async (req, res, next) => {
         const { session, user } = req
         const { ProductId } = req.body
 
@@ -11,7 +10,7 @@ export default {
             return res.status(400).json({ message: "Product ID is Required" })
         }
 
-        const isLikeExist = await Like.findOne({
+        const isExist = await Like.findOne({
             where: {
                 UserId: user.id,
             },
@@ -25,7 +24,7 @@ export default {
             ],
         })
 
-        if (isLikeExist) {
+        if (isExist) {
             return res.status(401).json({
                 message: `You already liked this product`,
             })
@@ -34,13 +33,13 @@ export default {
         }
     },
 
-    isLikeOwner: async (req, res, next) => {
+    isOwner: async (req, res, next) => {
         const id = parseInt(req.params.id)
         const { session, user } = req
 
-        const isLikeOwner = await findOneLikeQuery({ id, userId: user.id })
+        const isOwner = await findOneQuery({ id, userId: user.id })
 
-        if (isLikeOwner) {
+        if (isOwner) {
             return next()
         } else {
             return res.status(401).json({

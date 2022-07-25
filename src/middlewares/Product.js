@@ -1,7 +1,7 @@
-import { findOneProductQuery } from "../queries/products.js"
+import { productsQueries } from "../queries/index.js"
 
 export default {
-    isProductOwner: async (req, res, next) => {
+    isOwner: async (req, res, next) => {
         const id = parseInt(req.params.id)
         const { session, user } = req
 
@@ -11,11 +11,9 @@ export default {
             })
         }
 
-        const isProductOwner = user.Products.find(
-            (product) => product.id === id
-        )
+        const isOwner = user.Products.find((product) => product.id === id)
 
-        if (isProductOwner) {
+        if (isOwner) {
             return next()
         } else {
             return res.status(401).json({

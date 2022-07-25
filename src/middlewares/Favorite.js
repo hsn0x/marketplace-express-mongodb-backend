@@ -1,8 +1,7 @@
-import Favorite from "../models/Favorite.js"
-import Product from "../models/Product.js"
-import { findOneFavoriteQuery } from "../queries/favorites.js"
+import { ProductModel, FavoriteModel } from "../models/index.js"
+import { favoritesQueries } from "../queries/index.js"
 export default {
-    isFavoriteExist: async (req, res, next) => {
+    isExist: async (req, res, next) => {
         const { session, user } = req
         const { ProductId } = req.body
 
@@ -10,7 +9,7 @@ export default {
             return res.status(400).json({ message: "Product ID is Required" })
         }
 
-        const isFavoriteExist = await Favorite.findOne({
+        const isExist = await Favorite.findOne({
             where: {
                 UserId: user.id,
             },
@@ -24,7 +23,7 @@ export default {
             ],
         })
 
-        if (isFavoriteExist) {
+        if (isExist) {
             return res.status(401).json({
                 message: `You already favorited this product`,
             })
@@ -33,16 +32,16 @@ export default {
         }
     },
 
-    isFavoriteOwner: async (req, res, next) => {
+    isOwner: async (req, res, next) => {
         const id = parseInt(req.params.id)
         const { session, user } = req
 
-        const isFavoriteOwner = await findOneFavoriteQuery({
+        const isOwner = await findOneQuery({
             id,
             userId: user.id,
         })
 
-        if (isFavoriteOwner) {
+        if (isOwner) {
             return next()
         } else {
             return res.status(401).json({
