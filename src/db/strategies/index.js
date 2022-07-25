@@ -1,3 +1,1 @@
-import { localStrategy } from "./Local.js";
-
-export { localStrategy };
+export { default as localStrategy } from "./Local.js"
