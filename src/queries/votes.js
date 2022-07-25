@@ -1,47 +1,64 @@
 import { VoteModel } from "../models/index.js"
 import { productsQueries } from "./index.js"
 export default {
-    findAllQuery: async () => {
-        const votes = await VoteModel.scope("withAssociations").findAll()
-        return votes
-    },
-    findAllVotesBySearchQuery: async ({ query }) => {
-        const queries = query
-            .trim()
-            .split(" ")
-            .filter((q) => q !== "")
-            .map((q) => ({ name: { [Op.vote]: `%${q}%` } }))
+    findAllQuery: async (
+        filter = {},
+        populate = [],
+        salt = [],
+        { page, size }
+    ) => {
+        const { limit, skip } = getPagination(page, size)
 
-        const vote = await VoteModel.scope("withAssociations").findAll({
-            where: {
-                [Op.or]: [...queries],
-            },
-        })
-        return vote
-    },
-    findByPkQuery: async (id) => {
-        const vote = await VoteModel.scope("withAssociations").findByPk(id)
-        return vote
-    },
-    findOneQuery: async (where) => {
-        const vote = await VoteModel.scope("withAssociations").findOne({
-            where,
-        })
-        return vote
-    },
-    createQuery: async (voteData) => {
-        const product = await findByPkQuery(voteData.ProductId)
+        const rows = await VoteModel.find(filter)
+            .select(salt)
+            .populate(populate)
+            .skip(skip)
+            .limit(limit)
+        const count = await VoteModel.count()
+        const { totalItems, totalPages, currentPage } = getPagingData(
+            count,
+            page,
+            limit
+        )
 
-        const createdVote = await product.create({
-            UserId: voteData.UserId,
-        })
-        return createdVote
+        return {
+            totalItems,
+            totalPages,
+            currentPage,
+            count,
+            rows,
+        }
     },
-    updateQuery: async (voteData, where) => {},
-    removeQuery: async (where) => {
-        const deletedVote = await VoteModel.destroy({
-            where,
-        })
-        return deletedVote
+    findByIdQuery: async (id, populate = [], salt = []) => {
+        const data = await VoteModel.findById(id)
+            .select(salt)
+            .populate(populate)
+        return data
+    },
+    findOneQuery: async (filter, populate = [], salt = []) => {
+        const data = await VoteModel.findOne(filter)
+            .select(salt)
+            .populate(populate)
+        return data
+    },
+    findByIdAndUpdate: async (id, data) => {
+        const recordUpdated = await VoteModel.findByIdAndUpdate(id, data)
+        return recordUpdated
+    },
+    findOneAndUpdate: async (filter, data) => {
+        const recordUpdated = await VoteModel.findOneAndUpdate(filter, data)
+        return recordUpdated
+    },
+    createQuery: async (data, options) => {
+        const recordCreated = VoteModel.create(data, options)
+        return recordCreated
+    },
+    updateOneQuery: async (filter, data, options = {}) => {
+        const recordUpdated = await VoteModel.updateOne(filter, data, options)
+        return recordUpdated
+    },
+    deleteOneQuery: async (filter, options) => {
+        const recordDeleted = await VoteModel.deleteOne(filter, options)
+        return recordDeleted
     },
 }

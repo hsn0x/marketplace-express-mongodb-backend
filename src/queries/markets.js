@@ -1,57 +1,64 @@
-import { Op } from "sequelize"
 import { MarketModel } from "../models/index.js"
-
+import { productsQueries } from "./index.js"
 export default {
-    findAllQuery: async () => {
-        const markets = await Market.scope("withAssociations").findAll()
-        return markets
-    },
-    findAllMarketsBySearchQuery: async ({ query }) => {
-        const queries = query
-            .trim()
-            .split(" ")
-            .filter((q) => q !== "")
-            .map((q) => ({ name: { [Op.like]: `%${q}%` } }))
+    findAllQuery: async (
+        filter = {},
+        populate = [],
+        salt = [],
+        { page, size }
+    ) => {
+        const { limit, skip } = getPagination(page, size)
 
-        const market = await Market.scope("withAssociations").findAll({
-            where: {
-                [Op.or]: [...queries],
-            },
-        })
-        return market
-    },
-    findByPkQuery: async (id) => {
-        const market = await Market.scope("withAssociations").findByPk(id)
-        return market
-    },
-    findOneQuery: async (where) => {
-        const market = await Market.scope("withAssociations").findOne({ where })
-        return market
-    },
-    createQuery: async (marketData) => {
-        const createdMarket = await Market.create(marketData)
-        marketData.CategoriesIds.map(
-            async (ci) => await createdMarket.addCategory(ci)
+        const rows = await MarketModel.find(filter)
+            .select(salt)
+            .populate(populate)
+            .skip(skip)
+            .limit(limit)
+        const count = await MarketModel.count()
+        const { totalItems, totalPages, currentPage } = getPagingData(
+            count,
+            page,
+            limit
         )
-        return createdMarket
+
+        return {
+            totalItems,
+            totalPages,
+            currentPage,
+            count,
+            rows,
+        }
     },
-    updateQuery: async (marketData, where) => {
-        await Market.update(marketData, { where })
-        const updatedMarket = await Market.scope("withAssociations").findOne({
-            where,
-        })
-        updatedMarket.categories.map(
-            async (c) => await updatedMarket.removeCategory(c.id)
-        )
-        marketData.CategoriesIds.map(
-            async (ci) => await updatedMarket.addCategory(ci)
-        )
-        return updatedMarket
+    findByIdQuery: async (id, populate = [], salt = []) => {
+        const data = await MarketModel.findById(id)
+            .select(salt)
+            .populate(populate)
+        return data
     },
-    removeQuery: async (where) => {
-        const deletedMarket = await Market.destroy({
-            where,
-        })
-        return deletedMarket
+    findOneQuery: async (filter, populate = [], salt = []) => {
+        const data = await MarketModel.findOne(filter)
+            .select(salt)
+            .populate(populate)
+        return data
+    },
+    findByIdAndUpdate: async (id, data) => {
+        const recordUpdated = await MarketModel.findByIdAndUpdate(id, data)
+        return recordUpdated
+    },
+    findOneAndUpdate: async (filter, data) => {
+        const recordUpdated = await MarketModel.findOneAndUpdate(filter, data)
+        return recordUpdated
+    },
+    createQuery: async (data, options) => {
+        const recordCreated = MarketModel.create(data, options)
+        return recordCreated
+    },
+    updateOneQuery: async (filter, data, options = {}) => {
+        const recordUpdated = await MarketModel.updateOne(filter, data, options)
+        return recordUpdated
+    },
+    deleteOneQuery: async (filter, options) => {
+        const recordDeleted = await MarketModel.deleteOne(filter, options)
+        return recordDeleted
     },
 }

@@ -1,39 +1,68 @@
 import { CategoryModel } from "../models/index.js"
-
+import { productsQueries } from "./index.js"
 export default {
-    findAllQuery: async () => {
-        const categories = await Category.scope("withAssociations").findAll()
-        return categories
-    },
-    findAllCategoriesWhereQuery: async (where) => {
-        const categories = await Category.scope("withAssociations").findAll({
-            where,
-        })
-        return categories
-    },
-    findByPkCategoryQuery: async (id) => {
-        const category = await Category.scope("withAssociations").findByPk(id)
-        return category
-    },
-    findOneCategoryQuery: async (where) => {
-        const category = await Category.scope("withAssociations").findOne({
-            where,
-        })
-        return category
-    },
-    createQuery: async (categoryData) => {
-        const createdCategory = await Category.create(categoryData)
-        return createdCategory
-    },
+    findAllQuery: async (
+        filter = {},
+        populate = [],
+        salt = [],
+        { page, size }
+    ) => {
+        const { limit, skip } = getPagination(page, size)
 
-    updateQuery: async (categoryData, where) => {
-        const updatedCategory = await Category.update(categoryData, { where })
-        return updatedCategory
+        const rows = await CategoryModel.find(filter)
+            .select(salt)
+            .populate(populate)
+            .skip(skip)
+            .limit(limit)
+        const count = await CategoryModel.count()
+        const { totalItems, totalPages, currentPage } = getPagingData(
+            count,
+            page,
+            limit
+        )
+
+        return {
+            totalItems,
+            totalPages,
+            currentPage,
+            count,
+            rows,
+        }
     },
-    removeQuery: async (id) => {
-        const deletedCategory = await Category.destroy({
-            where: id,
-        })
-        return deletedCategory
+    findByIdQuery: async (id, populate = [], salt = []) => {
+        const data = await CategoryModel.findById(id)
+            .select(salt)
+            .populate(populate)
+        return data
+    },
+    findOneQuery: async (filter, populate = [], salt = []) => {
+        const data = await CategoryModel.findOne(filter)
+            .select(salt)
+            .populate(populate)
+        return data
+    },
+    findByIdAndUpdate: async (id, data) => {
+        const recordUpdated = await CategoryModel.findByIdAndUpdate(id, data)
+        return recordUpdated
+    },
+    findOneAndUpdate: async (filter, data) => {
+        const recordUpdated = await CategoryModel.findOneAndUpdate(filter, data)
+        return recordUpdated
+    },
+    createQuery: async (data, options) => {
+        const recordCreated = CategoryModel.create(data, options)
+        return recordCreated
+    },
+    updateOneQuery: async (filter, data, options = {}) => {
+        const recordUpdated = await CategoryModel.updateOne(
+            filter,
+            data,
+            options
+        )
+        return recordUpdated
+    },
+    deleteOneQuery: async (filter, options) => {
+        const recordDeleted = await CategoryModel.deleteOne(filter, options)
+        return recordDeleted
     },
 }

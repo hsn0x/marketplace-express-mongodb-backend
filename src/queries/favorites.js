@@ -1,48 +1,68 @@
 import { FavoriteModel } from "../models/index.js"
 import { productsQueries } from "./index.js"
-
 export default {
-    findAllQuery: async () => {
-        const favorites = await Favorite.scope("withAssociations").findAll()
-        return favorites
-    },
-    findAllFavoritesBySearchQuery: async ({ query }) => {
-        const queries = query
-            .trim()
-            .split(" ")
-            .filter((q) => q !== "")
-            .map((q) => ({ name: { [Op.favorite]: `%${q}%` } }))
+    findAllQuery: async (
+        filter = {},
+        populate = [],
+        salt = [],
+        { page, size }
+    ) => {
+        const { limit, skip } = getPagination(page, size)
 
-        const favorite = await Favorite.scope("withAssociations").findAll({
-            where: {
-                [Op.or]: [...queries],
-            },
-        })
-        return favorite
-    },
-    findByPkQuery: async (id) => {
-        const favorite = await Favorite.scope("withAssociations").findByPk(id)
-        return favorite
-    },
-    findOneQuery: async (where) => {
-        const favorite = await Favorite.scope("withAssociations").findOne({
-            where,
-        })
-        return favorite
-    },
-    createQuery: async (favoriteData) => {
-        const product = await findByPkQuery(favoriteData.ProductId)
+        const rows = await FavoriteModel.find(filter)
+            .select(salt)
+            .populate(populate)
+            .skip(skip)
+            .limit(limit)
+        const count = await FavoriteModel.count()
+        const { totalItems, totalPages, currentPage } = getPagingData(
+            count,
+            page,
+            limit
+        )
 
-        const createdFavorite = await product.create({
-            UserId: favoriteData.UserId,
-        })
-        return createdFavorite
+        return {
+            totalItems,
+            totalPages,
+            currentPage,
+            count,
+            rows,
+        }
     },
-    updateQuery: async (favoriteData, where) => {},
-    deleteQuery: async (where) => {
-        const deletedFavorite = await Favorite.destroy({
-            where,
-        })
-        return deletedFavorite
+    findByIdQuery: async (id, populate = [], salt = []) => {
+        const data = await FavoriteModel.findById(id)
+            .select(salt)
+            .populate(populate)
+        return data
+    },
+    findOneQuery: async (filter, populate = [], salt = []) => {
+        const data = await FavoriteModel.findOne(filter)
+            .select(salt)
+            .populate(populate)
+        return data
+    },
+    findByIdAndUpdate: async (id, data) => {
+        const recordUpdated = await FavoriteModel.findByIdAndUpdate(id, data)
+        return recordUpdated
+    },
+    findOneAndUpdate: async (filter, data) => {
+        const recordUpdated = await FavoriteModel.findOneAndUpdate(filter, data)
+        return recordUpdated
+    },
+    createQuery: async (data, options) => {
+        const recordCreated = FavoriteModel.create(data, options)
+        return recordCreated
+    },
+    updateOneQuery: async (filter, data, options = {}) => {
+        const recordUpdated = await FavoriteModel.updateOne(
+            filter,
+            data,
+            options
+        )
+        return recordUpdated
+    },
+    deleteOneQuery: async (filter, options) => {
+        const recordDeleted = await FavoriteModel.deleteOne(filter, options)
+        return recordDeleted
     },
 }

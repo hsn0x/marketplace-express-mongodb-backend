@@ -1,52 +1,68 @@
 import { CommentModel } from "../models/index.js"
 import { productsQueries } from "./index.js"
-
 export default {
-    findAllCommentsQuery: async () => {
-        const comments = await Comment.scope("withAssociations").findAll()
-        return comments
-    },
-    findAllCommentsBySearchQuery: async ({ query }) => {
-        const queries = query
-            .trim()
-            .split(" ")
-            .filter((q) => q !== "")
-            .map((q) => ({ name: { [Op.like]: `%${q}%` } }))
+    findAllQuery: async (
+        filter = {},
+        populate = [],
+        salt = [],
+        { page, size }
+    ) => {
+        const { limit, skip } = getPagination(page, size)
 
-        const comment = await Comment.scope("withAssociations").findAll({
-            where: {
-                [Op.or]: [...queries],
-            },
-        })
-        return comment
+        const rows = await CommentModel.find(filter)
+            .select(salt)
+            .populate(populate)
+            .skip(skip)
+            .limit(limit)
+        const count = await CommentModel.count()
+        const { totalItems, totalPages, currentPage } = getPagingData(
+            count,
+            page,
+            limit
+        )
+
+        return {
+            totalItems,
+            totalPages,
+            currentPage,
+            count,
+            rows,
+        }
     },
-    findByPkQuery: async (id) => {
-        const comment = await Comment.scope("withAssociations").findByPk(id)
-        return comment
+    findByIdQuery: async (id, populate = [], salt = []) => {
+        const data = await CommentModel.findById(id)
+            .select(salt)
+            .populate(populate)
+        return data
     },
-    findOneQuery: async (where) => {
-        const comment = await Comment.scope("withAssociations").findOne({
-            where,
-        })
-        return comment
+    findOneQuery: async (filter, populate = [], salt = []) => {
+        const data = await CommentModel.findOne(filter)
+            .select(salt)
+            .populate(populate)
+        return data
     },
-    createQuery: async (commentData) => {
-        const product = await findByPkQuery(commentData.productId)
-        const createdComment = await product.create(commentData)
-        const comment = await findByPkQuery(createdComment.id)
-        return comment
+    findByIdAndUpdate: async (id, data) => {
+        const recordUpdated = await CommentModel.findByIdAndUpdate(id, data)
+        return recordUpdated
     },
-    updateQuery: async (commentData, where) => {
-        await Comment.update(commentData, { where })
-        const updatedComment = await Comment.scope("withAssociations").findOne({
-            where,
-        })
-        return updatedComment
+    findOneAndUpdate: async (filter, data) => {
+        const recordUpdated = await CommentModel.findOneAndUpdate(filter, data)
+        return recordUpdated
     },
-    removeQuery: async (where) => {
-        const deletedComment = await Comment.destroy({
-            where,
-        })
-        return deletedComment
+    createQuery: async (data, options) => {
+        const recordCreated = CommentModel.create(data, options)
+        return recordCreated
+    },
+    updateOneQuery: async (filter, data, options = {}) => {
+        const recordUpdated = await CommentModel.updateOne(
+            filter,
+            data,
+            options
+        )
+        return recordUpdated
+    },
+    deleteOneQuery: async (filter, options) => {
+        const recordDeleted = await CommentModel.deleteOne(filter, options)
+        return recordDeleted
     },
 }

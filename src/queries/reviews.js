@@ -1,50 +1,64 @@
 import { ReviewModel } from "../models/index.js"
 import { productsQueries } from "./index.js"
-
 export default {
-    findAllQuery: async () => {
-        const reviews = await Review.scope("withAssociations").findAll()
-        return reviews
-    },
-    findAllReviewsBySearchQuery: async ({ query }) => {
-        const queries = query
-            .trim()
-            .split(" ")
-            .filter((q) => q !== "")
-            .map((q) => ({ name: { [Op.like]: `%${q}%` } }))
+    findAllQuery: async (
+        filter = {},
+        populate = [],
+        salt = [],
+        { page, size }
+    ) => {
+        const { limit, skip } = getPagination(page, size)
 
-        const review = await Review.scope("withAssociations").findAll({
-            where: {
-                [Op.or]: [...queries],
-            },
-        })
-        return review
+        const rows = await ReviewModel.find(filter)
+            .select(salt)
+            .populate(populate)
+            .skip(skip)
+            .limit(limit)
+        const count = await ReviewModel.count()
+        const { totalItems, totalPages, currentPage } = getPagingData(
+            count,
+            page,
+            limit
+        )
+
+        return {
+            totalItems,
+            totalPages,
+            currentPage,
+            count,
+            rows,
+        }
     },
-    findByPkReviewQuery: async (id) => {
-        const review = await Review.scope("withAssociations").findByPk(id)
-        return review
+    findByIdQuery: async (id, populate = [], salt = []) => {
+        const data = await ReviewModel.findById(id)
+            .select(salt)
+            .populate(populate)
+        return data
     },
-    findOneReviewQuery: async (where) => {
-        const review = await Review.scope("withAssociations").findOne({ where })
-        return review
+    findOneQuery: async (filter, populate = [], salt = []) => {
+        const data = await ReviewModel.findOne(filter)
+            .select(salt)
+            .populate(populate)
+        return data
     },
-    createReviewQuery: async (reviewData) => {
-        const product = await findByPkQuery(reviewData.productId)
-        const createdReview = await product.createReview(reviewData)
-        const review = await findByPkReviewQuery(createdReview.id)
-        return review
+    findByIdAndUpdate: async (id, data) => {
+        const recordUpdated = await ReviewModel.findByIdAndUpdate(id, data)
+        return recordUpdated
     },
-    updateReviewQuery: async (reviewData, where) => {
-        await Review.update(reviewData, { where })
-        const updatedReview = await Review.scope("withAssociations").findOne({
-            where,
-        })
-        return updatedReview
+    findOneAndUpdate: async (filter, data) => {
+        const recordUpdated = await ReviewModel.findOneAndUpdate(filter, data)
+        return recordUpdated
     },
-    deleteReviewQuery: async (where) => {
-        const deletedReview = await Review.destroy({
-            where,
-        })
-        return deletedReview
+    createQuery: async (data, options) => {
+        const recordCreated = ReviewModel.create(data, options)
+        return recordCreated
+    },
+    updateOneQuery: async (filter, data, options = {}) => {
+        const recordUpdated = await ReviewModel.updateOne(filter, data, options)
+        return recordUpdated
+    },
+    deleteOneQuery: async (filter, options) => {
+        const recordDeleted = await ReviewModel.deleteOne(filter, options)
+        return recordDeleted
     },
 }

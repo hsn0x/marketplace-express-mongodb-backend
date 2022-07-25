@@ -2,25 +2,25 @@ import { PermissionModel } from "../models/index.js"
 
 export default {
     findAllQuery: async (populate = [], salt = []) => {
-        const permissions = await Permission.find()
+        const permissions = await PermissionModel.find()
             .select(salt)
             .populate(populate)
         return permissions
     },
     findByIdQuery: async (id, populate = [], salt = []) => {
-        const permission = Permission.findById(id)
+        const permission = PermissionModel.findById(id)
             .select(salt)
             .populate(populate)
         return permission
     },
     findOneQuery: async (filter, populate = [], salt = []) => {
-        const permission = Permission.findOne(filter)
+        const permission = PermissionModel.findOne(filter)
             .select(salt)
             .populate(populate)
         return permission
     },
     findOneAndUpdate: async (filter, data) => {
-        const updatedPermission = await Permission.findOneAndUpdate(
+        const updatedPermission = await PermissionModel.findOneAndUpdate(
             filter,
             data
         )
@@ -30,7 +30,7 @@ export default {
         const { title, description, price, UserId, PermissionId, CategoryId } =
             permission
 
-        const createdPermission = await Permission.create({
+        const createdPermission = await PermissionModel.create({
             title,
             description,
             price,
@@ -41,7 +41,7 @@ export default {
         return createdPermission
     },
     updateOneQuery: async (filter, data, options = {}) => {
-        const updatedPermission = await Permission.updateOne(
+        const updatedPermission = await PermissionModel.updateOne(
             filter,
             data,
             options
@@ -49,7 +49,10 @@ export default {
         return updatedPermission
     },
     deleteOneQuery: async (filter, options) => {
-        const deletedPermission = await Permission.deleteOne(filter, options)
+        const deletedPermission = await PermissionModel.deleteOne(
+            filter,
+            options
+        )
         return deletedPermission
     },
 }
