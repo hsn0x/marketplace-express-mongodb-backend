@@ -1,5 +1,5 @@
 {
-    "name": "hsn-marketplace-expressjs-sequelize-backend",
+    "name": "marketplace-express-mongodb-backend",
     "version": "1.0.5",
     "description": "hsn marketplace with multi stores, products, members",
     "main": "src/index.js",
@@ -8,7 +8,7 @@
     "type": "module",
     "private": true,
     "repository": {
-        "url": "https://github.com/hsn0x/hsn-marketplace-expressjs-sequelize-backend.git",
+        "url": "https://github.com/hsn0x/hsn-marketplace-expressjs-mongodb-backend.git",
         "type": "git",
         "directory": "."
     },
