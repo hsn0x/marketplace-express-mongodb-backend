@@ -9,7 +9,7 @@ I'm a full stack developer...
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/realhassaneben)
 [![twitter](https://img.shields.io/badge/twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/realhassaneben)
 
-# HSN Marketplace Express MongoDB Backend
+# Marketplace Express MongoDB Backend
 
 Multiple Stores Listing Backend with MongoDB Database API
 
@@ -126,8 +126,8 @@ To run this project, you will need to add the following environment variables to
 
 Here are some related projects
 
--   [HSN Marketplace Next.js Frontend](https://github.com/hsn0x/hsn-marketplace-nextjs-frontend)
--   [HSN Todos Express.js Seuqlieze.js Backend](https://github.com/hsn0x/hsn-todos-express.js-sequelize.js-backend)
+-   [Marketplace Next.js Frontend](https://github.com/hsn0x/marketplace-nextjs-frontend)
+-   [Todos Express.js Seuqlieze.js Backend](https://github.com/hsn0x/todos-express.js-sequelize.js-backend)
 
 ## Roadmap
 
@@ -137,11 +137,11 @@ Here are some related projects
 
 ## Support
 
-For support, twitter [@hsn0x](https://twitter.com/hsn0x)
+For support, twitter [@hsn0x](https://twitter.com/hsn_0x)
 
 ## Feedback
 
-If you have any feedback, please reach out to us at [@hsn0x](https://twitter.com/hsn0x)
+If you have any feedback, please reach out to us at [@hsn0x](https://twitter.com/hsn_0x)
 
 ## License
 
