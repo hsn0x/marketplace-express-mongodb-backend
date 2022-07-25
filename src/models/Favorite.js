@@ -1,21 +1,13 @@
-import sequelize from "../db/sequelize.js";
+import mongoose from "mongoose"
 
-import { INTEGER, STRING } from "../db/dataTypes.js";
-import { Model } from "sequelize";
+const Schema = mongoose.Schema
+const model = mongoose.model
 
-class Favorite extends Model {
-    async getFavoriteables(options) {
-        const products = await this.getProducts(options);
-        const markets = await this.getMarkets(options);
-        return products.concat(markets);
-    }
-}
-Favorite.init(
-    {
-        favoriteableId: INTEGER,
-        favoriteableType: STRING,
-    },
-    { sequelize, modelName: "favorite" }
-);
+const schema = Schema({})
 
-export default Favorite;
+schema.pre("save", function (next) {
+    this.slug = slugify(this.name, { lower: true })
+    next()
+})
+
+export default model("Favorite", schema)

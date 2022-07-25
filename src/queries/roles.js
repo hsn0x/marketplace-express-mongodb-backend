@@ -1,50 +1,36 @@
-import { Role } from "../models/index.js";
+import { Role } from "../models/index.js"
 
-const findAllRolesQuery = async (include = []) => {
-    const roles = await Role.findAll({ include: [...include] });
-    return roles;
-};
-
-const findByPkRoleQuery = (id) => {
-    const role = Role.findByPk(id);
-    return role;
-};
-const findOneRoleQuery = (where) => {
-    const role = Role.findOne({ where });
-    return role;
-};
-
-const createRoleQuery = async (role) => {
-    const { title, description, price, UserId, RoleId, CategoryId } = role;
-
-    const createdRole = await Role.create({
-        title,
-        description,
-        price,
-        UserId,
-        RoleId,
-        CategoryId,
-    });
-    await createdRole.setUser(UserId);
-    await createdRole.setRole(RoleId);
-    return createdRole;
-};
-
-const updateRoleQuery = async (id, role) => {
-    await Role.update(role, { where: { ...id } });
-};
-
-const deleteRoleQuery = async (id) => {
-    await Role.destroy({
-        where: id,
-    });
-};
-
-export {
-    findAllRolesQuery,
-    findByPkRoleQuery,
-    findOneRoleQuery,
-    createRoleQuery,
-    updateRoleQuery,
-    deleteRoleQuery,
-};
+export default {
+    findAllQuery: async (populate = [], salt = []) => {
+        const roles = await Role.find().select(salt).populate(populate)
+        return roles
+    },
+    findByIdQuery: async (id, populate = [], salt = []) => {
+        const role = await Role.findById(id).select(salt).populate(populate)
+        return role
+    },
+    findOneQuery: async (filter, populate = [], salt = []) => {
+        const role = await Role.findOne(filter).select(salt).populate(populate)
+        return role
+    },
+    findByIdAndUpdate: async (id, data) => {
+        const roleUpdated = await Role.findByIdAndUpdate(id, data)
+        return roleUpdated
+    },
+    findOneAndUpdate: async (filter, data) => {
+        const roleUpdated = await Role.findOneAndUpdate(filter, data)
+        return roleUpdated
+    },
+    createQuery: async (data, options) => {
+        const createdRole = await Role.create(data, options)
+        return createdRole
+    },
+    updateOneQuery: async (filter, data, options = {}) => {
+        const recordUpdated = await Role.updateOne(filter, data, options)
+        return recordUpdated
+    },
+    deleteQuery: async (filter, options) => {
+        const recordDeleted = await Role.deleteOne(filter, options)
+        return recordDeleted
+    },
+}

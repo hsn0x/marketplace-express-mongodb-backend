@@ -1,39 +1,17 @@
-import Market from "./Market.js";
-import Product from "./Product.js";
-import Student from "./Student.js";
-import User from "./User.js";
-import Category from "./Category.js";
-import Post from "./Post.js";
-import Image from "./Image.js";
-import Avatar from "./Avatar.js";
-import Video from "./Video.js";
-import Comment from "./Comment.js";
-import Review from "./Review.js";
-import Role from "./Role.js";
-import Permission from "./Permission.js";
-import Resource from "./Resource.js";
-import Category_Categoryable from "./Category_Categoryable.js";
-import Like from "./Like.js";
-import Vote from "./Vote.js";
-import Favorite from "./Favorite.js";
-
-export {
-    Market,
-    Product,
-    Student,
-    User,
-    Category,
-    Post,
-    Image,
-    Avatar,
-    Video,
-    Comment,
-    Review,
-    Role,
-    Permission,
-    Resource,
-    Category_Categoryable,
-    Like,
-    Vote,
-    Favorite,
-};
+export { deafult as MarketModel } from "./Market.js"
+export { deafult as ProductModel } from "./Product.js"
+export { deafult as StudentModel } from "./Student.js"
+export { deafult as UserModel } from "./User.js"
+export { deafult as CategoryModel } from "./Category.js"
+export { deafult as PostModel } from "./Post.js"
+export { deafult as ImageModel } from "./Image.js"
+export { deafult as AvatarModel } from "./Avatar.js"
+export { deafult as VideoModel } from "./Video.js"
+export { deafult as CommentModel } from "./Comment.js"
+export { deafult as ReviewModel } from "./Review.js"
+export { deafult as RoleModel } from "./Role.js"
+export { deafult as PermissionModel } from "./Permission.js"
+export { deafult as ResourceModel } from "./Resource.js"
+export { deafult as LikeModel } from "./Like.js"
+export { deafult as VoteModel } from "./Vote.js"
+export { deafult as FavoriteModel } from "./Favorite.js"

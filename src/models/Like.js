@@ -1,21 +1,8 @@
-import sequelize from "../db/sequelize.js";
+import mongoose from "mongoose"
 
-import { INTEGER, STRING } from "../db/dataTypes.js";
-import { Model } from "sequelize";
+const Schema = mongoose.Schema
+const model = mongoose.model
 
-class Like extends Model {
-    async getLikeables(options) {
-        const products = await this.getProducts(options);
-        const markets = await this.getMarkets(options);
-        return products.concat(markets);
-    }
-}
-Like.init(
-    {
-        likeableId: INTEGER,
-        likeableType: STRING,
-    },
-    { sequelize, modelName: "like" }
-);
+const schema = Schema({}, { timestamps: true })
 
-export default Like;
+export default model("Like", schema)

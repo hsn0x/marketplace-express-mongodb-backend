@@ -1,40 +1,33 @@
-import sequelize from "../db/sequelize.js";
-import SequelizeSlugify from "sequelize-slugify";
+import mongoose from "mongoose"
 
-import { INTEGER, STRING } from "../db/dataTypes.js";
-import { Model } from "sequelize";
+const Schema = mongoose.Schema
+const model = mongoose.model
 
-class Category extends Model {
-    async getCategoryables(options) {
-        const markets = await this.getMarkets(options);
-        const products = await this.getProducts(options);
-
-        return markets.concat(products);
-    }
-}
-
-Category.init(
+const schema = Schema(
     {
         name: {
-            type: STRING,
-            allowNull: false,
+            type: String,
+            required: true,
         },
         slug: {
-            type: STRING,
+            type: String,
         },
         description: {
-            type: STRING,
+            type: String,
         },
         parentId: {
             type: INTEGER,
         },
         type: {
-            type: STRING,
+            type: String,
         },
     },
-    { sequelize, modelName: "category" }
-);
+    { timestamps: true }
+)
 
-SequelizeSlugify.slugifyModel(Category, { source: ["name"] });
+schema.pre("save", function (next) {
+    this.slug = slugify(this.name, { lower: true })
+    next()
+})
 
-export default Category;
+export default model("Category", schema)

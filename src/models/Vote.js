@@ -1,21 +1,8 @@
-import sequelize from "../db/sequelize.js";
+import mongoose from "mongoose"
 
-import { INTEGER, STRING } from "../db/dataTypes.js";
-import { Model } from "sequelize";
+const Schema = mongoose.Schema
+const model = mongoose.model
 
-class Vote extends Model {
-    async getVoteables(options) {
-        const products = await this.getProducts(options);
-        const markets = await this.getMarkets(options);
-        return products.concat(markets);
-    }
-}
-Vote.init(
-    {
-        voteableId: INTEGER,
-        voteableType: STRING,
-    },
-    { sequelize, modelName: "vote" }
-);
+const schema = Schema({}, { timestamps: true })
 
-export default Vote;
+export default model("Vote", schema)

@@ -1,20 +1,30 @@
-import sequelize from "../db/sequelize.js";
-import { STRING } from "../db/dataTypes.js";
+import mongoose from "mongoose"
 
-const Post = sequelize.define("Post", {
-    title: {
-        type: STRING,
-        allowNull: false,
-    },
-    slug: {
-        type: STRING,
-        allowNull: false,
-        unique: true,
-    },
-    content: {
-        type: STRING,
-        allowNull: false,
-    },
-});
+const Schema = mongoose.Schema
+const model = mongoose.model
 
-export default Post;
+const schema = Schema(
+    {
+        title: {
+            type: String,
+            required: true,
+        },
+        slug: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        content: {
+            type: String,
+            required: true,
+        },
+    },
+    { timestamps: true }
+)
+
+schema.pre("save", function (next) {
+    this.slug = slugify(this.name, { lower: true })
+    next()
+})
+
+export default model("Post", schema)

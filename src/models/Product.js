@@ -1,39 +1,40 @@
-import sequelize from "../db/sequelize.js";
-import SequelizeSlugify from "sequelize-slugify";
+import mongoose from "mongoose"
 
-import { ARRAY, INTEGER, STRING, TEXT } from "../db/dataTypes.js";
+const Schema = mongoose.Schema
+const model = mongoose.model
 
-const Product = sequelize.define(
-    "Product",
+const schema = Schema(
     {
         title: {
-            type: STRING,
-            allowNull: false,
+            type: String,
+            required: true,
         },
         slug: {
-            type: STRING,
-            // unique: true,
+            type: String,
         },
         description: {
-            type: TEXT,
-            allowNull: false,
+            type: String,
+            required: true,
         },
         about: {
-            type: TEXT,
-            allowNull: false,
+            type: String,
+            required: true,
         },
         price: {
-            type: INTEGER,
-            allowNull: false,
+            type: Number,
+            required: true,
         },
         quantity: {
-            type: INTEGER,
-            allowNull: false,
+            type: Number,
+            required: true,
         },
     },
-    {}
-);
+    { timestamps: true }
+)
 
-SequelizeSlugify.slugifyModel(Product, { source: ["title"] });
+schema.pre("save", function (next) {
+    this.slug = slugify(this.title, { lower: true })
+    next()
+})
 
-export default Product;
+export default model("Product", schema)

@@ -1,24 +1,42 @@
-import sequelize from "../db/sequelize.js";
-import SequelizeSlugify from "sequelize-slugify";
+import mongoose from "mongoose"
+import slugify from "slugify"
 
-import { ARRAY, INTEGER, STRING, TEXT } from "../db/dataTypes.js";
+const Schema = mongoose.Schema
+const model = mongoose.model
 
-const Permission = sequelize.define("Permission", {
-    name: {
-        type: STRING,
-        allowNull: false,
-        unique: true,
+const schema = Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        slug: {
+            type: String,
+            unique: true,
+        },
+        description: {
+            type: String,
+        },
+        Roles: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Role",
+            },
+        ],
+        Resources: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Resource",
+            },
+        ],
     },
-    slug: {
-        type: STRING,
-        allowNull: false,
-        unique: true,
-    },
-    description: {
-        type: STRING,
-    },
-});
+    { timestamps: true }
+)
 
-SequelizeSlugify.slugifyModel(Permission, { source: ["name"] });
+schema.pre("save", function (next) {
+    this.slug = slugify(this.name, { lower: true })
+    next()
+})
 
-export default Permission;
+export default model("Permission", schema)

@@ -1,24 +1,42 @@
-import sequelize from "../db/sequelize.js";
-import SequelizeSlugify from "sequelize-slugify";
+import mongoose from "mongoose"
+import slugify from "slugify"
 
-import { ARRAY, INTEGER, STRING, TEXT } from "../db/dataTypes.js";
+const Schema = mongoose.Schema
+const model = mongoose.model
 
-const Role = sequelize.define("Role", {
-    name: {
-        type: STRING,
-        allowNull: false,
-        unique: true,
+const schema = Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        slug: {
+            type: String,
+            unique: true,
+        },
+        description: {
+            type: String,
+        },
+        Users: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
+        Permissions: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Permission",
+            },
+        ],
     },
-    slug: {
-        type: STRING,
-        allowNull: false,
-        unique: true,
-    },
-    description: {
-        type: STRING,
-    },
-});
+    { timestamps: true }
+)
 
-SequelizeSlugify.slugifyModel(Role, { source: ["name"] });
+schema.pre("save", function (next) {
+    this.slug = slugify(this.name, { lower: true })
+    next()
+})
 
-export default Role;
+export default model("Role", schema)

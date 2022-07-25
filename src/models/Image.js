@@ -1,12 +1,9 @@
-import sequelize from "../db/sequelize.js";
-import SequelizeSlugify from "sequelize-slugify";
+import mongoose from "mongoose"
 
-import { STRING, TEXT } from "../db/dataTypes.js";
-import { Model } from "sequelize";
+const Schema = mongoose.Schema
+const model = mongoose.model
 
-class Image extends Model {}
-
-Image.init(
+const schema = Schema(
     {
         public_id: {
             type: STRING,
@@ -47,7 +44,7 @@ Image.init(
         imageableId: { type: STRING },
         imageableType: { type: STRING },
     },
-    { sequelize, modelName: "image" }
-);
+    { timestamps: true }
+)
 
-export default Image;
+export default model("Category", schema)

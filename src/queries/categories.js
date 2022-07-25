@@ -1,51 +1,39 @@
-import { Category } from "../scopes/index.js";
+import { Category } from "../scopes/index.js"
 
-const findAllCategoriesQuery = async () => {
-    const categories = await Category.scope("withAssociations").findAll();
-    return categories;
-};
-const findAllCategoriesWhereQuery = async (where) => {
-    const categories = await Category.scope("withAssociations").findAll({
-        where,
-    });
-    return categories;
-};
+export default {
+    findAllCategoriesQuery: async () => {
+        const categories = await Category.scope("withAssociations").findAll()
+        return categories
+    },
+    findAllCategoriesWhereQuery: async (where) => {
+        const categories = await Category.scope("withAssociations").findAll({
+            where,
+        })
+        return categories
+    },
+    findByPkCategoryQuery: async (id) => {
+        const category = await Category.scope("withAssociations").findByPk(id)
+        return category
+    },
+    findOneCategoryQuery: async (where) => {
+        const category = await Category.scope("withAssociations").findOne({
+            where,
+        })
+        return category
+    },
+    createCategoryQuery: async (categoryData) => {
+        const createdCategory = await Category.create(categoryData)
+        return createdCategory
+    },
 
-const findByPkCategoryQuery = async (id) => {
-    const category = await Category.scope("withAssociations").findByPk(id);
-    return category;
-};
-const findOneCategoryQuery = async (where) => {
-    const category = await Category.scope("withAssociations").findOne({
-        where,
-    });
-    return category;
-};
-
-const createCategoryQuery = async (categoryData) => {
-    const createdCategory = await Category.create(categoryData);
-    return createdCategory;
-};
-
-const updateCategoryQuery = async (categoryData, where) => {
-    const updatedCategory = await Category.update(categoryData, { where });
-    return updatedCategory;
-};
-
-const deleteCategoryQuery = async (id) => {
-    const deletedCategory = await Category.destroy({
-        where: id,
-    });
-
-    return deletedCategory;
-};
-
-export {
-    findAllCategoriesQuery,
-    findAllCategoriesWhereQuery,
-    findByPkCategoryQuery,
-    findOneCategoryQuery,
-    createCategoryQuery,
-    updateCategoryQuery,
-    deleteCategoryQuery,
-};
+    updateCategoryQuery: async (categoryData, where) => {
+        const updatedCategory = await Category.update(categoryData, { where })
+        return updatedCategory
+    },
+    deleteCategoryQuery: async (id) => {
+        const deletedCategory = await Category.destroy({
+            where: id,
+        })
+        return deletedCategory
+    },
+}

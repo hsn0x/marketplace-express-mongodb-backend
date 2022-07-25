@@ -1,23 +1,25 @@
-import sequelize from "../db/sequelize.js";
+import mongoose from "mongoose"
 
-import { INTEGER, STRING, TEXT } from "../db/dataTypes.js";
-import { Model } from "sequelize";
+const Schema = mongoose.Schema
+const model = mongoose.model
 
-class Comment extends Model {}
-Comment.init(
+const schema = Schema(
     {
         title: {
-            type: STRING,
-            allowNull: false,
+            type: String,
+            required: true,
         },
         content: {
-            type: TEXT,
-            allowNull: false,
+            type: String,
+            required: true,
         },
-        commentableId: { type: INTEGER },
-        commentableType: { type: STRING },
     },
-    { sequelize, modelName: "comment" }
-);
+    { timestamps: true }
+)
 
-export default Comment;
+schema.pre("save", function (next) {
+    this.slug = slugify(this.name, { lower: true })
+    next()
+})
+
+export default model("Comment", schema)

@@ -1,27 +1,24 @@
-import sequelize from "../db/sequelize.js";
+import mongoose from "mongoose"
 
-import { INTEGER, STRING, TEXT } from "../db/dataTypes.js";
-import { Model } from "sequelize";
+const Schema = mongoose.Schema
+const model = mongoose.model
 
-class Review extends Model {}
-Review.init(
+const schema = Schema(
     {
         rate: {
-            type: INTEGER,
-            allowNull: false,
+            type: Number,
+            required: true,
         },
         title: {
-            type: STRING,
-            allowNull: false,
+            type: String,
+            required: true,
         },
         content: {
-            type: TEXT,
-            allowNull: false,
+            type: String,
+            required: true,
         },
-        reviewableId: { type: INTEGER },
-        reviewableType: { type: STRING },
     },
-    { sequelize, modelName: "review" }
-);
+    { timestamps: true }
+)
 
-export default Review;
+export default model("Review", schema)

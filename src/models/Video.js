@@ -1,16 +1,18 @@
-import sequelize from "../db/sequelize.js";
-import SequelizeSlugify from "sequelize-slugify";
+import mongoose from "mongoose"
 
-import { STRING } from "../db/dataTypes.js";
+const Schema = mongoose.Schema
+const model = mongoose.model
 
-const Video = sequelize.define("Video", {
-    public_id: {
-        type: STRING,
+const schema = Schema(
+    {
+        public_id: {
+            type: String,
+        },
+        url: {
+            type: String,
+        },
     },
-    url: {
-        type: STRING,
-    },
-});
-SequelizeSlugify.slugifyModel(Video, { source: ["name"] });
+    { timestamps: true }
+)
 
-export default Video;
+export default model("Video", schema)

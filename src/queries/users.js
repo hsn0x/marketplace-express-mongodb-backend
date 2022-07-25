@@ -1,30 +1,56 @@
-import { User } from "../scopes/index.js";
+import { getPagination, getPagingData } from "../lib/handlePagination.js"
+import User from "../models/User.js"
 
-export const findAllUsersQuery = async (scope) => {
-    return await User.scope(scope).findAll();
-};
-export const findByPkUserQuery = async (id, scope) => {
-    return await User.scope(scope).findByPk(id);
-};
-export const findOneUserQuery = async (where, scope) => {
-    return await User.scope(scope).findOne({ where });
-};
-export const createUserQuery = async (user) => {
-    const createdUser = await User.create(user);
+export default {
+    findAllQuery: async (populate = [], salt = [], { page, size }) => {
+        const { limit, skip } = getPagination(page, size)
 
-    delete createdUser.dataValues.password;
-    delete createdUser.dataValues.passwordHash;
-    delete createdUser.dataValues.passwordSalt;
+        const rows = await User.find()
+            .select(salt)
+            .populate(populate)
+            .skip(skip)
+            .limit(limit)
+        const count = await User.count()
+        const { totalItems, totalPages, currentPage } = getPagingData(
+            count,
+            page,
+            limit
+        )
 
-    return createdUser;
-};
-export const updateUserQuery = async (user, where) => {
-    const updatedUser = await User.update(user, { where });
-    return updatedUser;
-};
-export const deleteUserQuery = async (where) => {
-    const deletedUser = await User.destroy({
-        where,
-    });
-    return deletedUser;
-};
+        return {
+            totalItems,
+            totalPages,
+            currentPage,
+            count,
+            rows,
+        }
+    },
+    findByIdQuery: async (id, populate = [], salt = []) => {
+        const data = await User.findById(id).populate(populate).select(salt)
+        return data
+    },
+    findOneQuery: async (filter, populate = [], salt = []) => {
+        const data = await User.findOne(filter).populate(populate).select(salt)
+        return data
+    },
+    findByIdAndUpdate: async (id, data) => {
+        const recordUpdated = await User.findByIdAndUpdate(id, data)
+        return recordUpdated
+    },
+    findOneAndUpdate: async (filter, data) => {
+        const recordUpdated = await User.findOneAndUpdate(filter, data)
+        return recordUpdated
+    },
+    createQuery: async (data, options) => {
+        const createdUser = User.create(data, options)
+        return createdUser
+    },
+    updateOneQuery: async (filter, data, options = {}) => {
+        const recordUpdated = await User.updateOne(filter, data, options)
+        return recordUpdated
+    },
+    deleteOneQuery: async (filter, options) => {
+        const recordDeleted = await User.deleteOne(filter, options)
+        return recordDeleted
+    },
+}
