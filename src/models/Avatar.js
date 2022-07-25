@@ -51,6 +51,12 @@ const schema = Schema(
                 ref: "Product",
             },
         ],
+        Markets: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Market",
+            },
+        ],
         Categories: [
             {
                 type: Schema.Types.ObjectId,

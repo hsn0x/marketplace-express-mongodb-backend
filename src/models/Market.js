@@ -28,6 +28,41 @@ const schema = Schema(
         description: {
             type: String,
         },
+
+        Images: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Image",
+            },
+        ],
+        Avatars: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Avatar",
+            },
+        ],
+        Comments: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Comment",
+            },
+        ],
+        Reviews: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Review",
+            },
+        ],
+        Categories: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Category",
+            },
+        ],
+        User: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
     },
     { timestamps: true }
 )

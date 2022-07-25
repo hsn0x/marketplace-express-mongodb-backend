@@ -18,6 +18,10 @@ const schema = Schema(
             type: Schema.Types.ObjectId,
             ref: "Product",
         },
+        Market: {
+            type: Schema.Types.ObjectId,
+            ref: "Market",
+        },
     },
     { timestamps: true }
 )

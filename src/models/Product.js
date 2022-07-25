@@ -29,6 +29,13 @@ const schema = Schema(
             type: Number,
             required: true,
         },
+
+        Images: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Image",
+            },
+        ],
         Comments: [
             {
                 type: Schema.Types.ObjectId,

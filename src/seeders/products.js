@@ -19,7 +19,7 @@ export const createFakeProducts = async (record) => {
     const fakeProductReviews = []
     const fakeProductComments = []
 
-    const categories = await CategoryModel.find()
+    const categories = await CategoryModel.find({ type: "product" })
     const markets = await MarketModel.find()
     const users = await UserModel.find()
 
