@@ -26,7 +26,7 @@ if (deploymentConfig.service == "heroku") {
 const server = async () => {
     app.listen(serverPort, () => {
         console.log(
-            `Express.js API Server with MongoDB is runnig ..., on port http://${serverHost}:${serverPort}`
+            `Express API Server with MongoDB is runnig ..., on port http://${serverHost}:${serverPort}`
         )
     })
 }

@@ -127,7 +127,7 @@ To run this project, you will need to add the following environment variables to
 Here are some related projects
 
 -   [Marketplace Next.js Frontend](https://github.com/hsn0x/marketplace-nextjs-frontend)
--   [Todos Express.js Seuqlieze.js Backend](https://github.com/hsn0x/todos-express.js-sequelize.js-backend)
+-   [Todos Express Seuqlieze.js Backend](https://github.com/hsn0x/todos-express.js-sequelize.js-backend)
 
 ## Roadmap
 
