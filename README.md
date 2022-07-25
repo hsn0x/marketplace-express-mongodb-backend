@@ -69,15 +69,16 @@ To run this project, you will need to add the following environment variables to
 
 `NODE_ENV`
 
-### Sequelize
+### MongoDB
 
-`SEQUELIZE_DB_DATABASE`
-`SEQUELIZE_DB_USERNAME`
-`SEQUELIZE_DB_PASSWORD`
+`MONGO_DB_DATABASE`
+`MONGO_DB_USERNAME`
+`MONGO_DB_PASSWORD`
 `SEQUELIZE_DB_HOSTNAME`
-`SEQUELIZE_DB_PORT`
-`SEQUELIZE_DB_DIALECT`
-`SEQUELIZE_DB_LOGGING`
+`MONGO_DB_HOSTNAME`
+`MONGO_DB_PORT`
+
+### Express
 
 `EXPRESS_HOST`
 `EXPRESS_PORT`
@@ -127,7 +128,7 @@ To run this project, you will need to add the following environment variables to
 Here are some related projects
 
 -   [Marketplace Next.js Frontend](https://github.com/hsn0x/marketplace-nextjs-frontend)
--   [Todos Express Seuqlieze.js Backend](https://github.com/hsn0x/todos-express.js-sequelize.js-backend)
+-   [Todos Express Seuqlieze Backend](https://github.com/hsn0x/todos-express.js-sequelize.js-backend)
 
 ## Roadmap
 
