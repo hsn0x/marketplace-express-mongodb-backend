@@ -8,7 +8,7 @@
     "type": "module",
     "private": true,
     "repository": {
-        "url": "https://github.com/hsn0x/hsn-marketplace-expressjs-mongodb-backend.git",
+        "url": "https://github.com/hsn0x/marketplace-express-mongodb-backend.git",
         "type": "git",
         "directory": "."
     },
