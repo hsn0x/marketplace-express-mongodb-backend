@@ -646,7 +646,7 @@
                     "response": []
                 },
                 {
-                    "name": "createReview",
+                    "name": "create",
                     "request": {
                         "method": "POST",
                         "header": [],
@@ -685,7 +685,7 @@
                     "response": []
                 },
                 {
-                    "name": "updateReview",
+                    "name": "update",
                     "request": {
                         "method": "PUT",
                         "header": [],
@@ -703,7 +703,7 @@
                     "response": []
                 },
                 {
-                    "name": "deleteReview",
+                    "name": "remove",
                     "request": {
                         "method": "DELETE",
                         "header": [],

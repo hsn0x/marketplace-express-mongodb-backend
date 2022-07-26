@@ -1,17 +1,17 @@
 import { Router } from "express"
-import { CommentController } from "../controllers/index.js"
 import { AuthMiddleware } from "../middlewares/index.js"
+import { CommentController } from "../controllers/index.js"
 import { CommentMiddleware } from "../middlewares/index.js"
 
 const router = Router()
 
-router.get("/:id", CommentMiddleware.isIdValid, CommentController.getById)
+router.get("/", CommentController.getAll)
+router.post("/", AuthMiddleware.isAuth, CommentController.create)
+
+router.get("/q/:query", CommentController.getAllBySearch)
 router.get("/name/:slug", CommentController.getBySlug)
 
-router.get("/", CommentController.getAll)
-router.get("/q/:query", CommentController.getAllBySearch)
-
-router.post("/", AuthMiddleware.isAuth, CommentController.create)
+router.get("/:id", CommentMiddleware.isIdValid, CommentController.getById)
 router.put(
     "/:id",
     AuthMiddleware.isAuth,

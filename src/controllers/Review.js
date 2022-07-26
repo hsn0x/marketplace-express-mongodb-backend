@@ -1,131 +1,184 @@
-import { reviewsQueries } from "../queries/index.js"
+import {
+    categoriesQueries,
+    reviewsQueries,
+    usersQueries,
+} from "../queries/index.js"
 import { ReviewValidation } from "../validation/index.js"
+
 export default {
-    getAll: async (request, response) => {
-        const reviews = await findAllQuery()
-        if (reviews) {
-            response.status(200).json({
-                message: `Reviews found`,
-                reviews,
-            })
+    getById: async (req, res) => {
+        const id = req.params.id
+        const data = await reviewsQueries.findByIdQuery(id)
+        if (data) {
+            res.status(200).json(data)
         } else {
-            response.status(404).json({ message: "No reviews found" })
-        }
-    },
-    getAllBySearch: async (request, response) => {
-        const query = request.params.query
-
-        const reviews = await findAllReviewsBySearchQuery({ query })
-        if (reviews) {
-            return response.status(200).json({
-                message: `Reviews found with query: ${query}, `,
-                length: reviews.length,
-                reviews,
-            })
-        } else {
-            return response
-                .status(404)
-                .json({ message: `Review not found with Query: ${query}` })
-        }
-    },
-    getById: async (request, response) => {
-        const id = parseInt(request.params.id)
-        const review = await findOneQuery({ id })
-        if (review) {
-            response.status(200).json({
-                message: `Review found with ID: ${id}`,
-                review,
-            })
-        } else {
-            response.status(404).json({
-                message: `Review not found with ID: ${id}`,
+            res.status(404).json({
+                message: `Record not found with ID: ${id}`,
             })
         }
     },
-    getByName: async (request, response) => {
-        const slug = request.params.slug
-        const review = await findOneQuery({ slug })
-        if (review) {
-            response.status(200).json({
-                message: `Review found with ID: ${slug}`,
-                review,
-            })
+    getBySlug: async (req, res) => {
+        const slug = req.params.slug
+        const data = await reviewsQueries.findOneQuery({ slug })
+        if (data) {
+            res.status(200).json(data)
         } else {
-            response.status(404).json({
-                message: `Review not found with ID: ${slug}`,
+            res.status(404).json({
+                message: `Record not found with ID: ${slug}`,
             })
         }
     },
 
-    createReview: async (request, response) => {
-        const { session, user } = request
+    getAll: async (req, res) => {
+        const { page, size } = req.query
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
 
-        const { rate, title, content, productId } = request.body
-        const reviewData = {
-            rate: parseInt(rate),
+        const data = await reviewsQueries.findAllQuery({}, [], [], params)
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+    getAllByFilters: async (req, res) => {
+        const { page, size } = req.query
+        const { query } = req.params
+        const filter = { $text: { $search: query } }
+
+        if (!query) {
+            return res.status(400).json({ message: "Invalid Query" })
+        }
+
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
+
+        const data = await reviewsQueries.findAllQuery(filter, [], [], params)
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+    getAllBySearch: async (req, res) => {
+        const { page, size } = req.query
+        const { query } = req.params
+        const filter = { $text: { $search: query } }
+        if (!query) {
+            return res.status(400).json({ message: "Invalid Query" })
+        }
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
+
+        const data = await reviewsQueries.findAllQuery(filter, [], [], params)
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+    getAllByUserId: async (req, res) => {
+        const UserId = req.params.id
+        const { page, size } = req.query
+        const filter = { UserId }
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
+
+        const data = await reviewsQueries.findAllQuery(filter, [], [], params)
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+
+    create: async (req, res, next) => {
+        const { session, user } = req
+
+        const { rate, title, content, Product, Market } = req.body
+        const data = {
+            rate: Number(rate),
             title,
             content,
-            productId: parseInt(productId),
-            UserId: user.id,
+            Product,
+            Market,
+            User: user.id,
         }
 
-        const isReviewValid = validateCreate(reviewData)
+        const isValid = ReviewValidation.validateCreate(data)
 
-        if (!isReviewValid.valid) {
-            return response.status(400).json({
-                message: "Invalid review data",
-                errors: isReviewValid.errors,
+        if (!isValid.valid) {
+            return res.status(400).json({
+                message: "Invalid record data",
+                errors: isValid.errors,
             })
         }
 
-        const createdReview = await createQuery(reviewData)
+        const createdRecord = await reviewsQueries.createQuery(data)
 
-        if (createdReview) {
-            return response.status(201).json({
-                message: `Review added with ID: ${createdReview.id}`,
-                data: createdReview,
-            })
+        await usersQueries.findOneAndUpdate(
+            { _id: user.id },
+            {
+                $push: {
+                    Reviews: createdRecord._id,
+                },
+            }
+        )
+
+        if (createdRecord) {
+            return res.status(201).json(createdRecord)
         } else {
-            return response
-                .status(500)
-                .json({ message: `Faile to create a review` })
+            return res.status(500).json({ message: `Faile to create a record` })
         }
     },
+    update: async (req, res) => {
+        const id = req.params.id
+        const { session, user } = req
 
-    updateReview: async (request, response) => {
-        const id = parseInt(request.params.id)
-        const { session, user } = request
-
-        const { rate } = request.body
-
-        const reviewData = {
-            rate: parseInt(rate),
-            UserId: user.id,
+        const { rate, title, content, Product, Market } = req.body
+        const data = {
+            rate: Number(rate),
+            title,
+            content,
+            Product,
+            Market,
+            User: user.id,
         }
 
-        const isReviewValid = validateUpdateReview(reviewData)
-
-        if (!isReviewValid) {
-            response.status(400).json({ message: "Review not updated" })
+        const isValid = ReviewValidation.validateUpdate(data)
+        if (!isValid.valid) {
+            return res.status(400).json({
+                message: "Invalid record data",
+                errors: isValid.errors,
+            })
         }
 
-        const updatedReview = await updateQuery(reviewData, { id })
-
-        if (updatedReview) {
-            response.status(200).json({
-                message: `Review updated with ID: ${updatedReview[0]?.id}`,
-                data: updatedReview,
+        const updatedRecord = await reviewsQueries.updateOneQuery(
+            { _id: id },
+            data
+        )
+        if (updatedRecord) {
+            return res.status(200).json({
+                message: `Record updated with ID: ${updatedRecord.id}`,
+                data: updatedRecord,
             })
         } else {
-            response.status(500).json({
-                message: `Faile to update a review, ${id}`,
+            return res.status(500).json({
+                message: `Faile to update a record, ${id}`,
             })
         }
     },
-
-    deleteReview: async (request, response) => {
-        const id = parseInt(request.params.id)
-        await deleteQuery({ id })
-        response.status(200).json({ message: `Review deleted with ID: ${id}` })
+    remove: async (req, res) => {
+        const id = req.params.id
+        await reviewsQueries.deleteOneQuery({ _id: id })
+        res.status(200).json({ message: `Record deleted with ID: ${id}` })
     },
 }

@@ -7,10 +7,21 @@ const CreateSchema = {
     properties: {
         title: { type: "string" },
         content: { type: "string" },
-        Product: { type: "string" },
-        User: { type: "string" },
+
+        Product: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
+        Market: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
+        User: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
     },
-    required: ["title", "content", "Product", "User"],
+    required: ["title", "content", "User"],
     additionalProperties: false,
 }
 
@@ -19,10 +30,21 @@ const UpdateSchema = {
     properties: {
         title: { type: "string" },
         content: { type: "string" },
-        Product: { type: "string" },
-        User: { type: "string" },
+
+        Product: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
+        Market: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
+        User: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
     },
-    required: ["title", "content", "Product", "User"],
+    required: ["title", "content", "User"],
     additionalProperties: false,
 }
 

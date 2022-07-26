@@ -8,19 +8,19 @@ const router = Router()
 router.get("/", ReviewController.getAll)
 router.get("/:id", ReviewController.getById)
 router.get("/q/:query", ReviewController.getAllBySearch)
-router.get("/name/:slug", ReviewController.getByName)
-router.post("/", AuthMiddleware.isAuth, ReviewController.createReview)
+router.get("/name/:slug", ReviewController.getBySlug)
+router.post("/", AuthMiddleware.isAuth, ReviewController.create)
 router.put(
     "/:id",
     AuthMiddleware.isAuth,
     ReviewMiddleware.isOwner,
-    ReviewController.updateReview
+    ReviewController.update
 )
 router.delete(
     "/:id",
     AuthMiddleware.isAuth,
     ReviewMiddleware.isOwner,
-    ReviewController.deleteReview
+    ReviewController.remove
 )
 
 export default router

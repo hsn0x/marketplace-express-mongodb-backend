@@ -120,11 +120,12 @@ export default {
     create: async (req, res, next) => {
         const { session, user } = req
 
-        const { title, content, Product } = req.body
+        const { title, content, Product, Market } = req.body
         const data = {
             title,
             content,
             Product,
+            Market,
             User: user.id,
         }
 
@@ -147,16 +148,6 @@ export default {
                 },
             }
         )
-        Categories.forEach(async (categoryId) => {
-            await categoriesQueries.findOneAndUpdate(
-                { _id: categoryId },
-                {
-                    $push: {
-                        Comments: createdRecord._id,
-                    },
-                }
-            )
-        })
 
         if (createdRecord) {
             return res.status(201).json(createdRecord)
@@ -168,11 +159,12 @@ export default {
         const id = req.params.id
         const { session, user } = req
 
-        const { title, content, Product } = req.body
+        const { title, content, Product, Market } = req.body
         const data = {
             title,
             content,
             Product,
+            Market,
             User: user.id,
         }
 

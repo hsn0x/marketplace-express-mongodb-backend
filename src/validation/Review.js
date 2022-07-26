@@ -2,35 +2,57 @@ import Ajv from "ajv"
 
 const ajv = new Ajv()
 
-const CreateReviewSchema = {
+const CreateSchema = {
     type: "object",
     properties: {
         rate: { type: "number" },
         title: { type: "string" },
         content: { type: "string" },
-        productId: { type: "number" },
-        UserId: { type: "number" },
+
+        Product: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
+        Market: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
+        User: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
     },
-    required: ["rate", "title", "content", "productId", "UserId"],
+    required: ["rate", "title", "content", "User"],
     additionalProperties: false,
 }
 
-const UpdateReviewSchema = {
+const UpdateSchema = {
     type: "object",
     properties: {
         rate: { type: "number" },
         title: { type: "string" },
         content: { type: "string" },
-        productId: { type: "number" },
-        UserId: { type: "number" },
+
+        Product: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
+        Market: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
+        User: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
     },
-    required: ["rate", "title", "content", "productId", "UserId"],
+    required: ["rate", "title", "content", "User"],
     additionalProperties: false,
 }
 
 export default {
     validateCreate: (reviewData) => {
-        const valid = ajv.validate(CreateReviewSchema, reviewData)
+        const valid = ajv.validate(CreateSchema, reviewData)
         if (!valid)
             return {
                 valid,
@@ -39,7 +61,7 @@ export default {
         return { valid }
     },
     validateUpdateReview: (reviewData) => {
-        const valid = ajv.validate(UpdateReviewSchema, reviewData)
+        const valid = ajv.validate(UpdateSchema, reviewData)
         if (!valid)
             return {
                 valid,
