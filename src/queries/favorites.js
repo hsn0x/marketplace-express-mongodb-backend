@@ -1,5 +1,6 @@
+import { getPagination, getPagingData } from "../lib/handlePagination.js"
 import { FavoriteModel } from "../models/index.js"
-import { productsQueries } from "./index.js"
+import { favoritesQueries } from "./index.js"
 export default {
     findAllQuery: async (
         filter = {},

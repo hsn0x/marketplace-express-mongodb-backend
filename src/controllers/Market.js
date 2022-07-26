@@ -1,138 +1,215 @@
-import { marketsQueries } from "../queries/index.js"
+import {
+    categoriesQueries,
+    marketsQueries,
+    usersQueries,
+} from "../queries/index.js"
 import { MarketValidation } from "../validation/index.js"
+
 export default {
-    getAll: async (request, response) => {
-        const markets = await findAllQuery()
-        if (markets) {
-            response.status(200).json({
-                message: `Markets found`,
-                markets,
-            })
+    getById: async (req, res) => {
+        const id = req.params.id
+        const data = await marketsQueries.findByIdQuery(id)
+        if (data) {
+            res.status(200).json(data)
         } else {
-            response.status(404).json({ message: "No markets found" })
-        }
-    },
-    getAllBySearch: async (request, response) => {
-        const query = request.params.query
-
-        const markets = await findAllMarketsBySearchQuery({ query })
-        if (markets) {
-            return response.status(200).json({
-                message: `Markets found with query: ${query}, `,
-                length: markets.length,
-                markets,
-            })
-        } else {
-            return response
-                .status(404)
-                .json({ message: `Market not found with Query: ${query}` })
-        }
-    },
-    getById: async (request, response) => {
-        const id = parseInt(request.params.id)
-        const market = await findOneQuery({ id })
-        if (market) {
-            response.status(200).json({
-                message: `Market found with ID: ${id}`,
-                market,
-            })
-        } else {
-            response.status(404).json({
-                message: `Market not found with ID: ${id}`,
+            res.status(404).json({
+                message: `Record not found with ID: ${id}`,
             })
         }
     },
-    getByName: async (request, response) => {
-        const slug = request.params.slug
-        const market = await findOneQuery({ slug })
-        if (market) {
-            response.status(200).json({
-                message: `Market found with ID: ${slug}`,
-                market,
-            })
+    getBySlug: async (req, res) => {
+        const slug = req.params.slug
+        const data = await marketsQueries.findOneQuery({ slug })
+        if (data) {
+            res.status(200).json(data)
         } else {
-            response.status(404).json({
-                message: `Market not found with ID: ${slug}`,
+            res.status(404).json({
+                message: `Record not found with ID: ${slug}`,
             })
         }
     },
 
-    create: async (request, response) => {
-        const { session, user } = request
+    getAll: async (req, res) => {
+        const { page, size } = req.query
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
 
-        const { name, username, title, description, about, CategoriesIds } =
-            request.body
-        const marketData = {
+        const data = await marketsQueries.findAllQuery({}, [], [], params)
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+    getAllByFilters: async (req, res) => {
+        const { page, size } = req.query
+        const { query } = req.params
+        const filter = { $text: { $search: query } }
+
+        if (!query) {
+            return res.status(400).json({ message: "Invalid Query" })
+        }
+
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
+
+        const data = await marketsQueries.findAllQuery(filter, [], [], params)
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+    getAllBySearch: async (req, res) => {
+        const { page, size } = req.query
+        const { query } = req.params
+        const filter = { $text: { $search: query } }
+        if (!query) {
+            return res.status(400).json({ message: "Invalid Query" })
+        }
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
+
+        const data = await marketsQueries.findAllQuery(filter, [], [], params)
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+    getAllByTaskId: async (req, res) => {
+        const TaskId = req.params.id
+        const { page, size } = req.query
+        const filter = { TaskId }
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
+
+        const data = await marketsQueries.findAllQuery(filter, [], [], params)
+
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+    getAllByUserId: async (req, res) => {
+        const UserId = req.params.id
+        const { page, size } = req.query
+        const filter = { UserId }
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
+
+        const data = await marketsQueries.findAllQuery(filter, [], [], params)
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+
+    create: async (req, res, next) => {
+        const { session, user } = req
+
+        const { name, username, title, description, about, Categories } =
+            req.body
+        const data = {
             name,
             username,
             title,
             description,
             about,
-            UserId: user.id,
-            CategoriesIds,
+            User: user.id,
+            Categories,
         }
 
-        const isMarketValid = validateCreate(marketData)
+        const isValid = MarketValidation.validateCreate(data)
 
-        if (!isMarketValid.valid) {
-            return response.status(400).json({
-                message: "Invalid market data",
-                errors: isMarketValid.errors,
+        if (!isValid.valid) {
+            return res.status(400).json({
+                message: "Invalid record data",
+                errors: isValid.errors,
             })
         }
 
-        const createdMarket = await createQuery(marketData)
+        const createdRecord = await marketsQueries.createQuery(data)
 
-        if (createdMarket) {
-            return response.status(201).json({
-                message: `Market added with ID: ${createdMarket.id}`,
-                data: createdMarket,
-            })
+        await usersQueries.findOneAndUpdate(
+            { _id: user.id },
+            {
+                $push: {
+                    Markets: createdRecord._id,
+                },
+            }
+        )
+        Categories.forEach(async (categoryId) => {
+            await categoriesQueries.findOneAndUpdate(
+                { _id: categoryId },
+                {
+                    $push: {
+                        Markets: createdRecord._id,
+                    },
+                }
+            )
+        })
+
+        if (createdRecord) {
+            return res.status(201).json(createdRecord)
         } else {
-            return response
-                .status(500)
-                .json({ message: `Faile to create a market` })
+            return res.status(500).json({ message: `Faile to create a record` })
         }
     },
-    update: async (request, response) => {
-        const id = parseInt(request.params.id)
-        const { session, user } = request
+    update: async (req, res) => {
+        const id = req.params.id
+        const { session, user } = req
 
-        const { name, username, about, title, description, CategoriesIds } =
-            request.body
-
-        const marketData = {
+        const { name, username, title, description, about, Categories } =
+            req.body
+        const data = {
             name,
             username,
             title,
             description,
             about,
-            CategoriesIds,
-            UserId: user.id,
+            User: user.id,
+            Categories,
         }
 
-        const isMarketValid = validateUpdateMarket(marketData)
-
-        if (!isMarketValid) {
-            response.status(400).json({ message: "Market not updated" })
+        const isValid = MarketValidation.validateUpdate(data)
+        if (!isValid.valid) {
+            return res.status(400).json({
+                message: "Invalid record data",
+                errors: isValid.errors,
+            })
         }
 
-        const updatedMarket = await updateQuery(marketData, { id })
-
-        if (updatedMarket) {
-            response.status(200).json({
-                message: `Market updated with ID: ${updatedMarket[0]?.id}`,
-                data: updatedMarket,
+        const updatedRecord = await marketsQueries.updateOneQuery(
+            { _id: id },
+            data
+        )
+        if (updatedRecord) {
+            return res.status(200).json({
+                message: `Record updated with ID: ${updatedRecord.id}`,
+                data: updatedRecord,
             })
         } else {
-            response.status(500).json({
-                message: `Faile to update a market, ${id}`,
+            return res.status(500).json({
+                message: `Faile to update a record, ${id}`,
             })
         }
     },
-    remove: async (request, response) => {
-        const id = parseInt(request.params.id)
-        await removeQuery({ id })
-        response.status(200).json({ message: `Market deleted with ID: ${id}` })
+    remove: async (req, res) => {
+        const id = req.params.id
+        await marketsQueries.deleteOneQuery({ _id: id })
+        res.status(200).json({ message: `Record deleted with ID: ${id}` })
     },
 }

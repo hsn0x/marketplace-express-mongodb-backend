@@ -31,6 +31,11 @@ const schema = Schema(
     { timestamps: true }
 )
 
+schema.index({
+    title: "text",
+    content: "text",
+})
+
 schema.pre("save", function (next) {
     this.slug = slugify(this.title, { lower: true })
     next()

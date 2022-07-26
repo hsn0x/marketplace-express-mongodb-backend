@@ -5,10 +5,12 @@ import { MarketMiddleware } from "../middlewares/index.js"
 
 const router = Router()
 
-router.get("/", MarketController.getAll)
 router.get("/:id", MarketMiddleware.isIdValid, MarketController.getById)
+router.get("/name/:slug", MarketController.getBySlug)
+
+router.get("/", MarketController.getAll)
 router.get("/q/:query", MarketController.getAllBySearch)
-router.get("/name/:slug", MarketController.getByName)
+
 router.post(
     "/",
     AuthMiddleware.isAuth,

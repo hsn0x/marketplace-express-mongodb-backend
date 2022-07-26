@@ -2,33 +2,33 @@ import Ajv from "ajv"
 
 const ajv = new Ajv()
 
-const CreateCommentSchema = {
+const CreateSchema = {
     type: "object",
     properties: {
         title: { type: "string" },
         content: { type: "string" },
-        productId: { type: "number" },
-        UserId: { type: "number" },
+        Product: { type: "string" },
+        User: { type: "string" },
     },
-    required: ["title", "content", "productId", "UserId"],
+    required: ["title", "content", "Product", "User"],
     additionalProperties: false,
 }
 
-const UpdateCommentSchema = {
+const UpdateSchema = {
     type: "object",
     properties: {
         title: { type: "string" },
         content: { type: "string" },
-        productId: { type: "number" },
-        UserId: { type: "number" },
+        Product: { type: "string" },
+        User: { type: "string" },
     },
-    required: ["title", "content", "productId", "UserId"],
+    required: ["title", "content", "Product", "User"],
     additionalProperties: false,
 }
 
 export default {
     validateCreate: (commentData) => {
-        const valid = ajv.validate(CreateCommentSchema, commentData)
+        const valid = ajv.validate(CreateSchema, commentData)
         if (!valid)
             return {
                 valid,
@@ -37,7 +37,7 @@ export default {
         return { valid }
     },
     validateUpdateComment: (commentData) => {
-        const valid = ajv.validate(UpdateCommentSchema, commentData)
+        const valid = ajv.validate(UpdateSchema, commentData)
         if (!valid)
             return {
                 valid,

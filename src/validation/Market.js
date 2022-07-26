@@ -2,7 +2,7 @@ import Ajv from "ajv"
 
 const ajv = new Ajv()
 
-const CreateMarketSchema = {
+const CreateSchema = {
     type: "object",
     properties: {
         name: { type: "string" },
@@ -10,13 +10,18 @@ const CreateMarketSchema = {
         title: { type: "string" },
         description: { type: "string" },
         about: { type: "string" },
-        CategoriesIds: {
+
+        Categories: {
             type: "array",
             items: {
-                type: "number",
+                type: "string",
+                pattern: "^[a-f\\d]{24}$",
             },
         },
-        UserId: { type: "number" },
+        User: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
     },
     required: [
         "name",
@@ -24,13 +29,14 @@ const CreateMarketSchema = {
         "title",
         "description",
         "about",
-        "CategoriesIds",
-        "UserId",
+
+        "Categories",
+        "User",
     ],
     additionalProperties: false,
 }
 
-const UpdateMarketSchema = {
+const UpdateSchema = {
     type: "object",
     properties: {
         name: { type: "string" },
@@ -38,13 +44,18 @@ const UpdateMarketSchema = {
         title: { type: "string" },
         description: { type: "string" },
         about: { type: "string" },
-        CategoriesIds: {
+
+        Categories: {
             type: "array",
             items: {
-                type: "number",
+                type: "string",
+                pattern: "^[a-f\\d]{24}$",
             },
         },
-        UserId: { type: "number" },
+        User: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
     },
     required: [
         "name",
@@ -52,14 +63,15 @@ const UpdateMarketSchema = {
         "title",
         "description",
         "about",
-        "CategoriesIds",
-        "UserId",
+
+        "Categories",
+        "User",
     ],
     additionalProperties: false,
 }
 export default {
-    validateCreate: (marketData) => {
-        const valid = ajv.validate(CreateMarketSchema, marketData)
+    validateCreate: (data) => {
+        const valid = ajv.validate(CreateSchema, data)
         if (!valid)
             return {
                 valid,
@@ -67,8 +79,8 @@ export default {
             }
         return { valid }
     },
-    validateUpdateMarket: (marketData) => {
-        const valid = ajv.validate(UpdateMarketSchema, marketData)
+    validateUpdate: (data) => {
+        const valid = ajv.validate(UpdateSchema, data)
         if (!valid)
             return {
                 valid,

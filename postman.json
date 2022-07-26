@@ -1275,7 +1275,7 @@
                     "response": []
                 },
                 {
-                    "name": "getMarketsBySearch",
+                    "name": "getBySearch",
                     "request": {
                         "method": "GET",
                         "header": [],

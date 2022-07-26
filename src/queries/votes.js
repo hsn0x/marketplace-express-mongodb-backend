@@ -1,5 +1,6 @@
+import { getPagination, getPagingData } from "../lib/handlePagination.js"
 import { VoteModel } from "../models/index.js"
-import { productsQueries } from "./index.js"
+import { votesQueries } from "./index.js"
 export default {
     findAllQuery: async (
         filter = {},

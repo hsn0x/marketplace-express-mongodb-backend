@@ -8,7 +8,7 @@ export default {
 
         if (!user.Products || !user.Products.length > 0) {
             return res.status(401).json({
-                message: `You dont have any products`,
+                message: `You dont have any records`,
             })
         }
 

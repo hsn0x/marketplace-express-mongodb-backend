@@ -1,138 +1,207 @@
-import { commentsQueries } from "../queries/index.js"
+import {
+    categoriesQueries,
+    commentsQueries,
+    usersQueries,
+} from "../queries/index.js"
 import { CommentValidation } from "../validation/index.js"
 
 export default {
-    getAll: async (request, response) => {
-        const comments = await commentsQueries.findAllQuery()
-        if (comments) {
-            response.status(200).json({
-                message: `Comments found`,
-                comments,
-            })
+    getById: async (req, res) => {
+        const id = req.params.id
+        const data = await commentsQueries.findByIdQuery(id)
+        if (data) {
+            res.status(200).json(data)
         } else {
-            response.status(404).json({ message: "No comments found" })
+            res.status(404).json({
+                message: `Record not found with ID: ${id}`,
+            })
         }
     },
-    getAllBySearch: async (request, response) => {
-        const query = request.params.query
+    getBySlug: async (req, res) => {
+        const slug = req.params.slug
+        const data = await commentsQueries.findOneQuery({ slug })
+        if (data) {
+            res.status(200).json(data)
+        } else {
+            res.status(404).json({
+                message: `Record not found with ID: ${slug}`,
+            })
+        }
+    },
 
-        const comments = await commentsQueries.findAllCommentsBySearchQuery({
-            query,
-        })
-        if (comments) {
-            return response.status(200).json({
-                message: `Comments found with query: ${query}, `,
-                length: comments.length,
-                comments,
-            })
-        } else {
-            return response
-                .status(404)
-                .json({ message: `Comment not found with Query: ${query}` })
+    getAll: async (req, res) => {
+        const { page, size } = req.query
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
         }
-    },
-    getById: async (request, response) => {
-        const id = parseInt(request.params.id)
-        const comment = await commentsQueries.findOneQuery({ id })
-        if (comment) {
-            response.status(200).json({
-                message: `Comment found with ID: ${id}`,
-                comment,
-            })
-        } else {
-            response.status(404).json({
-                message: `Comment not found with ID: ${id}`,
-            })
-        }
-    },
-    getByName: async (request, response) => {
-        const slug = request.params.slug
-        const comment = await commentsQueries.findOneQuery({ slug })
-        if (comment) {
-            response.status(200).json({
-                message: `Comment found with ID: ${slug}`,
-                comment,
-            })
-        } else {
-            response.status(404).json({
-                message: `Comment not found with ID: ${slug}`,
-            })
-        }
-    },
-    create: async (request, response) => {
-        const { session, user } = request
 
-        const { title, content, productId } = request.body
-        const commentData = {
+        const data = await commentsQueries.findAllQuery({}, [], [], params)
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+    getAllByFilters: async (req, res) => {
+        const { page, size } = req.query
+        const { query } = req.params
+        const filter = { $text: { $search: query } }
+
+        if (!query) {
+            return res.status(400).json({ message: "Invalid Query" })
+        }
+
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
+
+        const data = await commentsQueries.findAllQuery(filter, [], [], params)
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+    getAllBySearch: async (req, res) => {
+        const { page, size } = req.query
+        const { query } = req.params
+        const filter = { $text: { $search: query } }
+        if (!query) {
+            return res.status(400).json({ message: "Invalid Query" })
+        }
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
+
+        const data = await commentsQueries.findAllQuery(filter, [], [], params)
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+    getAllByTaskId: async (req, res) => {
+        const TaskId = req.params.id
+        const { page, size } = req.query
+        const filter = { TaskId }
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
+
+        const data = await commentsQueries.findAllQuery(filter, [], [], params)
+
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+    getAllByUserId: async (req, res) => {
+        const UserId = req.params.id
+        const { page, size } = req.query
+        const filter = { UserId }
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
+
+        const data = await commentsQueries.findAllQuery(filter, [], [], params)
+        if (data) {
+            return res.status(200).json(data)
+        } else {
+            return res.status(404).json({ message: "No Data" })
+        }
+    },
+
+    create: async (req, res, next) => {
+        const { session, user } = req
+
+        const { title, content, Product } = req.body
+        const data = {
             title,
             content,
-            productId: parseInt(productId),
-            UserId: user.id,
+            Product,
+            User: user.id,
         }
 
-        const isCommentValid = validateCreate(commentData)
+        const isValid = CommentValidation.validateCreate(data)
 
-        if (!isCommentValid.valid) {
-            return response.status(400).json({
-                message: "Invalid comment data",
-                errors: isCommentValid.errors,
+        if (!isValid.valid) {
+            return res.status(400).json({
+                message: "Invalid record data",
+                errors: isValid.errors,
             })
         }
 
-        const createdComment = await commentsQueries.createQuery(commentData)
+        const createdRecord = await commentsQueries.createQuery(data)
 
-        if (createdComment) {
-            return response.status(201).json({
-                message: `Comment added with ID: ${createdComment.id}`,
-                data: createdComment,
-            })
-        } else {
-            return response
-                .status(500)
-                .json({ message: `Faile to create a comment` })
-        }
-    },
-    update: async (request, response) => {
-        const id = parseInt(request.params.id)
-        const { session, user } = request
-
-        const { name, username, about, title, description, CategoriesIds } =
-            request.body
-
-        const commentData = {
-            name,
-            username,
-            title,
-            description,
-            about,
-            CategoriesIds,
-            UserId: user.id,
-        }
-
-        const isCommentValid = validateUpdateComment(commentData)
-
-        if (!isCommentValid) {
-            response.status(400).json({ message: "Comment not updated" })
-        }
-
-        const updatedComment = await commentsQueries.updateQuery(commentData, {
-            id,
+        await usersQueries.findOneAndUpdate(
+            { _id: user.id },
+            {
+                $push: {
+                    Comments: createdRecord._id,
+                },
+            }
+        )
+        Categories.forEach(async (categoryId) => {
+            await categoriesQueries.findOneAndUpdate(
+                { _id: categoryId },
+                {
+                    $push: {
+                        Comments: createdRecord._id,
+                    },
+                }
+            )
         })
 
-        if (updatedComment) {
-            response.status(200).json({
-                message: `Comment updated with ID: ${updatedComment[0]?.id}`,
-                data: updatedComment,
+        if (createdRecord) {
+            return res.status(201).json(createdRecord)
+        } else {
+            return res.status(500).json({ message: `Faile to create a record` })
+        }
+    },
+    update: async (req, res) => {
+        const id = req.params.id
+        const { session, user } = req
+
+        const { title, content, Product } = req.body
+        const data = {
+            title,
+            content,
+            Product,
+            User: user.id,
+        }
+
+        const isValid = CommentValidation.validateUpdate(data)
+        if (!isValid.valid) {
+            return res.status(400).json({
+                message: "Invalid record data",
+                errors: isValid.errors,
+            })
+        }
+
+        const updatedRecord = await commentsQueries.updateOneQuery(
+            { _id: id },
+            data
+        )
+        if (updatedRecord) {
+            return res.status(200).json({
+                message: `Record updated with ID: ${updatedRecord.id}`,
+                data: updatedRecord,
             })
         } else {
-            response.status(500).json({
-                message: `Faile to update a comment, ${id}`,
+            return res.status(500).json({
+                message: `Faile to update a record, ${id}`,
             })
         }
     },
-    remove: async (request, response) => {
-        const id = parseInt(request.params.id)
-        await commentsQueries.removeQuery({ id })
-        response.status(200).json({ message: `Comment deleted with ID: ${id}` })
+    remove: async (req, res) => {
+        const id = req.params.id
+        await commentsQueries.deleteOneQuery({ _id: id })
+        res.status(200).json({ message: `Record deleted with ID: ${id}` })
     },
 }

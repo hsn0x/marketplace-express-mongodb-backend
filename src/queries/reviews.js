@@ -1,5 +1,6 @@
+import { getPagination, getPagingData } from "../lib/handlePagination.js"
 import { ReviewModel } from "../models/index.js"
-import { productsQueries } from "./index.js"
+import { reviewsQueries } from "./index.js"
 export default {
     findAllQuery: async (
         filter = {},

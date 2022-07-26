@@ -144,7 +144,7 @@ export default {
 
         if (!isValid.valid) {
             return res.status(400).json({
-                message: "Invalid product data",
+                message: "Invalid record data",
                 errors: isValid.errors,
             })
         }
@@ -173,9 +173,7 @@ export default {
         if (createdRecord) {
             return res.status(201).json(createdRecord)
         } else {
-            return res
-                .status(500)
-                .json({ message: `Faile to create a product` })
+            return res.status(500).json({ message: `Faile to create a record` })
         }
     },
     update: async (req, res) => {
@@ -205,7 +203,7 @@ export default {
         const isValid = ProductValidation.validateUpdate(data)
         if (!isValid.valid) {
             return res.status(400).json({
-                message: "Invalid product data",
+                message: "Invalid record data",
                 errors: isValid.errors,
             })
         }
@@ -221,7 +219,7 @@ export default {
             })
         } else {
             return res.status(500).json({
-                message: `Faile to update a product, ${id}`,
+                message: `Faile to update a record, ${id}`,
             })
         }
     },

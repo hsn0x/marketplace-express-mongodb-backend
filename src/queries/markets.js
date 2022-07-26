@@ -1,5 +1,6 @@
+import { getPagination, getPagingData } from "../lib/handlePagination.js"
 import { MarketModel } from "../models/index.js"
-import { productsQueries } from "./index.js"
+import { marketsQueries } from "./index.js"
 export default {
     findAllQuery: async (
         filter = {},
