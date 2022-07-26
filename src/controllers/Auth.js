@@ -61,7 +61,7 @@ export default {
         userData.passwordHash = hashedPassword.hash
         userData.passwordSalt = hashedPassword.salt
 
-        const isRegisterValid = validateRegister(userData)
+        const isRegisterValid = AuthValidation.validateRegister(userData)
 
         if (!isRegisterValid.valid) {
             return res.status(401).json({

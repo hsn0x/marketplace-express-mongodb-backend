@@ -30,12 +30,22 @@ const schema = Schema(
             required: true,
         },
 
+        Market: {
+            type: Schema.Types.ObjectId,
+            ref: "Market",
+        },
+        User: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
+
         Images: [
             {
                 type: Schema.Types.ObjectId,
                 ref: "Image",
             },
         ],
+
         Comments: [
             {
                 type: Schema.Types.ObjectId,
@@ -57,6 +67,8 @@ const schema = Schema(
     },
     { timestamps: true }
 )
+
+schema.index({ title: "text", description: "text" })
 
 schema.pre("save", function (next) {
     this.slug = slugify(this.title, { lower: true })

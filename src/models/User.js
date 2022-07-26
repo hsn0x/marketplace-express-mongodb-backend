@@ -42,6 +42,7 @@ const schema = mongoose.Schema(
         gender: {
             type: String,
         },
+
         Avatars: [
             {
                 type: Schema.Types.ObjectId,
@@ -58,6 +59,63 @@ const schema = mongoose.Schema(
             {
                 type: Schema.Types.ObjectId,
                 ref: "Role",
+            },
+        ],
+
+        Products: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Product",
+            },
+        ],
+        Markets: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Market",
+            },
+        ],
+        Categories: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Category",
+            },
+        ],
+        Posts: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Post",
+            },
+        ],
+
+        Likes: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Like",
+            },
+        ],
+        Votes: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Vote",
+            },
+        ],
+        Favorites: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Favroite",
+            },
+        ],
+
+        Comments: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Comment",
+            },
+        ],
+        Reviews: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Review",
             },
         ],
     },

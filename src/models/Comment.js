@@ -14,6 +14,7 @@ const schema = Schema(
             type: String,
             required: true,
         },
+
         Product: {
             type: Schema.Types.ObjectId,
             ref: "Product",
@@ -21,6 +22,10 @@ const schema = Schema(
         Market: {
             type: Schema.Types.ObjectId,
             ref: "Market",
+        },
+        User: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
         },
     },
     { timestamps: true }

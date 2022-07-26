@@ -11,6 +11,27 @@ const schema = Schema(
         url: {
             type: String,
         },
+
+        User: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
+        Product: {
+            type: Schema.Types.ObjectId,
+            ref: "Product",
+        },
+        Market: {
+            type: Schema.Types.ObjectId,
+            ref: "Market",
+        },
+        Review: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
+        Comment: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
     },
     { timestamps: true }
 )

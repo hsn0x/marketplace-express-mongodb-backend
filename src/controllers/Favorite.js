@@ -6,7 +6,7 @@ import { FavoriteValidation } from "../validation/index.js"
 
 export default {
     getAll: async (request, response) => {
-        const favorites = await findAllQuery()
+        const favorites = await favoritesQueries.findAllQuery()
         if (favorites) {
             response.status(200).json({ favorites })
         } else {
@@ -16,7 +16,9 @@ export default {
     getAllBySearch: async (request, response) => {
         const query = request.params.query
 
-        const favorites = await findAllFavoritesBySearchQuery({ query })
+        const favorites = await favoritesQueries.findAllFavoritesBySearchQuery({
+            query,
+        })
         if (favorites) {
             return response.status(200).json({
                 message: `Favorites found with query: ${query}, `,
@@ -32,7 +34,7 @@ export default {
 
     getById: async (request, response) => {
         const id = parseInt(request.params.id)
-        const favorite = await findOneQuery({ id })
+        const favorite = await favoritesQueries.findOneQuery({ id })
         if (favorite) {
             response.status(200).json({ favorite })
         } else {
@@ -43,7 +45,7 @@ export default {
     },
     getBySlug: async (request, response) => {
         const slug = request.params.slug
-        const favorite = await findOneQuery({ slug })
+        const favorite = await favoritesQueries.findOneQuery({ slug })
         if (favorite) {
             response.status(200).json({ favorite })
         } else {
@@ -60,7 +62,7 @@ export default {
             ProductId,
         }
 
-        // const isFavoriteValid = validateCreate(favoriteData);
+        // const isFavoriteValid = FavoriteValidation.validateCreate(favoriteData);
 
         // if (!isFavoriteValid.valid) {
         //     return response.status(400).json({
@@ -68,9 +70,11 @@ export default {
         //         errors: isFavoriteValid.errors,
         //     });
         // }
-        // const product = await findByPkQuery(favoriteData.ProductId);
+        // const product = await favoritesQueries.findByPkQuery(favoriteData.ProductId);
 
-        const createdFavorite = await favorites.createQuery(favoriteData)
+        const createdFavorite = await favoritesQueries.favorites.createQuery(
+            favoriteData
+        )
 
         if (createdFavorite) {
             return response.status(201).json({
@@ -84,17 +88,17 @@ export default {
         }
     },
     update: async (request, response, next) => {
-        const x = await isExist(request, response, next)
+        const x = await favoritesQueries.isExist(request, response, next)
         console.log({ x })
         if (!x) {
-            await create(request, response)
+            await favoritesQueries.create(request, response)
         } else {
-            await remove(request, response)
+            await favoritesQueries.remove(request, response)
         }
     },
     remove: async (request, response) => {
         const id = parseInt(request.params.id)
-        await deleteQuery({ id })
+        await favoritesQueries.deleteQuery({ id })
         return response
             .status(200)
             .json({ message: `Favorite deleted with ID: ${id}` })

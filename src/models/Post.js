@@ -18,6 +18,11 @@ const schema = Schema(
             type: String,
             required: true,
         },
+
+        User: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
     },
     { timestamps: true }
 )

@@ -22,18 +22,41 @@ const schema = Schema(
         type: {
             type: String,
         },
-        Images: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: "Image",
-            },
-        ],
         Avatars: [
             {
                 type: Schema.Types.ObjectId,
                 ref: "Avatar",
             },
         ],
+        Images: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Image",
+            },
+        ],
+
+        Products: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Product",
+            },
+        ],
+        Markets: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Market",
+            },
+        ],
+        Products: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Product",
+            },
+        ],
+        User: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
     },
     { timestamps: true }
 )

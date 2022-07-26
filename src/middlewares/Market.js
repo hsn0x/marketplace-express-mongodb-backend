@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb"
 import { marketsQueries } from "../queries/index.js"
 
 export default {
@@ -37,5 +38,12 @@ export default {
                 message: `You are not the owner of the market`,
             })
         }
+    },
+    isIdValid: async (req, res, next) => {
+        const id = req.params.id
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid  ID" })
+        }
+        return next()
     },
 }

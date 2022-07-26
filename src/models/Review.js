@@ -21,6 +21,11 @@ const schema = Schema(
             type: Schema.Types.ObjectId,
             ref: "Product",
         },
+
+        User: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
         Market: {
             type: Schema.Types.ObjectId,
             ref: "Market",
