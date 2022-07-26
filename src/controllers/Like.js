@@ -59,7 +59,7 @@ export default {
             ProductId,
         }
 
-        // const isLikeValid = validateCreateLike(likeData);
+        // const isLikeValid = validateCreate(likeData);
 
         // if (!isLikeValid.valid) {
         //     return response.status(400).json({

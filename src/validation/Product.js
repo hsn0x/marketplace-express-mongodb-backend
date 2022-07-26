@@ -58,7 +58,7 @@ const UpdateProductSchema = {
     additionalProperties: false,
 }
 export default {
-    validateCreateProduct: (productData) => {
+    validateCreate: (productData) => {
         const valid = ajv.validate(CreateProductSchema, productData)
         if (!valid)
             return {

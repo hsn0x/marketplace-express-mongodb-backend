@@ -59,7 +59,7 @@ const UpdateVoteSchema = {
 }
 
 export default {
-    validateCreateVote: (voteData) => {
+    validateCreate: (voteData) => {
         const valid = ajv.validate(CreateVoteSchema, voteData)
         if (!valid)
             return {
@@ -68,7 +68,7 @@ export default {
             }
         return { valid }
     },
-    validateUpdateVote: (voteData) => {
+    validateUpdate: (voteData) => {
         const valid = ajv.validate(UpdateVoteSchema, voteData)
         if (!valid)
             return {

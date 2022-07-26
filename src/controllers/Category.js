@@ -69,7 +69,7 @@ export default {
             type,
         }
 
-        const isCategoryValid = validateCreateCategory(categoryData)
+        const isCategoryValid = validateCreate(categoryData)
 
         if (!isCategoryValid.valid) {
             return response.status(400).json({
@@ -102,7 +102,7 @@ export default {
             title,
         }
 
-        const isCategoryValid = validateUpdateCategory(categoryData)
+        const isCategoryValid = validateUpdate(categoryData)
 
         if (!isCategoryValid) {
             response.status(400).json({ message: "Category not updated" })

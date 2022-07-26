@@ -8,7 +8,7 @@ export default {
             page: parseInt(page),
             size: parseInt(size),
         }
-        const products = await findAllQuery(params)
+        const products = await productsQueries.findAllQuery(params)
         if (products) {
             response.status(200).json(products)
         } else {
@@ -18,7 +18,9 @@ export default {
     getAllBySearch: async (request, response) => {
         const query = request.params.query
 
-        const products = await findAllProductsBySearchQuery({ query })
+        const products = await productsQueries.findAllProductsBySearchQuery({
+            query,
+        })
         if (products) {
             return response.status(200).json({
                 message: `Products found with query: ${query}, `,
@@ -40,10 +42,11 @@ export default {
             Number(ci)
         )
 
-        const products = await findAllProductsBySearchQueryWithFilters({
-            query,
-            filters,
-        })
+        const products =
+            await productsQueries.findAllProductsBySearchQueryWithFilters({
+                query,
+                filters,
+            })
         if (products) {
             return response.status(200).json({
                 message: `Products found with query: ${query}, `,
@@ -58,7 +61,7 @@ export default {
     },
     getById: async (request, response) => {
         const id = parseInt(request.params.id)
-        const product = await findOneQuery({ id })
+        const product = await productsQueries.findOneQuery({ id })
         if (product) {
             response.status(200).json({ product })
         } else {
@@ -69,7 +72,7 @@ export default {
     },
     getBySlug: async (request, response) => {
         const slug = request.params.slug
-        const product = await findOneQuery({ slug })
+        const product = await productsQueries.findOneQuery({ slug })
         if (product) {
             response.status(200).json({ product })
         } else {
@@ -93,7 +96,7 @@ export default {
             UserId: user.id,
         }
 
-        const isProductValid = validateCreateProduct(productData)
+        const isProductValid = ProductValidation.validateCreate(productData)
 
         if (!isProductValid.valid) {
             return response.status(400).json({
@@ -102,7 +105,7 @@ export default {
             })
         }
 
-        const createdProduct = await createQuery(productData)
+        const createdProduct = await productsQueries.createQuery(productData)
 
         if (createdProduct) {
             return response.status(201).json({
@@ -131,7 +134,8 @@ export default {
             UserId: user.id,
         }
 
-        const isProductValid = validateUpdateProduct(productData)
+        const isProductValid =
+            ProductValidation.validateUpdateProduct(productData)
 
         if (!isProductValid.valid) {
             return response.status(400).json({
@@ -140,7 +144,9 @@ export default {
             })
         }
 
-        const updatedProduct = await updateQuery(productData, { id })
+        const updatedProduct = await productsQueries.updateQuery(productData, {
+            id,
+        })
 
         if (updatedProduct) {
             return response.status(200).json({
@@ -155,7 +161,7 @@ export default {
     },
     remove: async (request, response) => {
         const id = parseInt(request.params.id)
-        await deleteQuery({ id })
+        await productsQueries.deleteQuery({ id })
         response.status(200).json({ message: `Product deleted with ID: ${id}` })
     },
 }

@@ -58,7 +58,7 @@ const UpdateLikeSchema = {
     additionalProperties: false,
 }
 export default {
-    validateCreateLike: (likeData) => {
+    validateCreate: (likeData) => {
         const valid = ajv.validate(CreateLikeSchema, likeData)
         if (!valid)
             return {
@@ -67,7 +67,7 @@ export default {
             }
         return { valid }
     },
-    validateUpdateLike: (likeData) => {
+    validateUpdate: (likeData) => {
         const valid = ajv.validate(UpdateLikeSchema, likeData)
         if (!valid)
             return {

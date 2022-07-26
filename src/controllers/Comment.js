@@ -68,7 +68,7 @@ export default {
             UserId: user.id,
         }
 
-        const isCommentValid = validateCreateComment(commentData)
+        const isCommentValid = validateCreate(commentData)
 
         if (!isCommentValid.valid) {
             return response.status(400).json({

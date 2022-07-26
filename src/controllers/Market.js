@@ -72,7 +72,7 @@ export default {
             CategoriesIds,
         }
 
-        const isMarketValid = validateCreateMarket(marketData)
+        const isMarketValid = validateCreate(marketData)
 
         if (!isMarketValid.valid) {
             return response.status(400).json({

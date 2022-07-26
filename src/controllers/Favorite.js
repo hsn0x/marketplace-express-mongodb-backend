@@ -60,7 +60,7 @@ export default {
             ProductId,
         }
 
-        // const isFavoriteValid = validateCreateFavorite(favoriteData);
+        // const isFavoriteValid = validateCreate(favoriteData);
 
         // if (!isFavoriteValid.valid) {
         //     return response.status(400).json({

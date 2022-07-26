@@ -4,9 +4,9 @@ import { AuthMiddleware } from "../middlewares/index.js"
 
 const router = Router()
 
-router.get("/", UserController.getUsers)
-router.get("/:id", UserController.getUserById)
-router.get("/username/:username", UserController.getUserByUsername)
+router.get("/", UserController.getAll)
+router.get("/:id", UserController.getById)
+router.get("/username/:username", UserController.getByUsername)
 router.post(
     "/",
     AuthMiddleware.isAuth,

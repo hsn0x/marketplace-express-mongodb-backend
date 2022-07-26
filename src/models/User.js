@@ -60,36 +60,6 @@ const schema = mongoose.Schema(
                 ref: "Role",
             },
         ],
-        Tasks: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: "Task",
-            },
-        ],
-        Projects: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: "Project",
-            },
-        ],
-        Comments: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: "Comment",
-            },
-        ],
-        Labels: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: "Label",
-            },
-        ],
-        Priorities: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: "Priority",
-            },
-        ],
     },
     { timestamps: true }
 )

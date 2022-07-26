@@ -58,7 +58,7 @@ const UpdateMarketSchema = {
     additionalProperties: false,
 }
 export default {
-    validateCreateMarket: (marketData) => {
+    validateCreate: (marketData) => {
         const valid = ajv.validate(CreateMarketSchema, marketData)
         if (!valid)
             return {

@@ -28,7 +28,7 @@ const UpdateReviewSchema = {
     additionalProperties: false,
 }
 export default {
-    validateCreateReview: (reviewData) => {
+    validateCreate: (reviewData) => {
         const valid = ajv.validate(CreateReviewSchema, reviewData)
         if (!valid)
             return {

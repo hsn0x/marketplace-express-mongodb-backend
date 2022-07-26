@@ -9,53 +9,70 @@ import {
 } from "../models/index.js"
 import { usersQueries } from "../queries/index.js"
 import { UserValidation } from "../validation/index.js"
+
 export default {
-    getUsers: async (request, response) => {
-        const users = await findAllUsersQuery(true)
-        if (users) {
-            response.status(200).json({ users })
+    getAll: async (req, res) => {
+        const { page, size } = req.query
+        const params = {
+            page: parseInt(page),
+            size: parseInt(size),
+        }
+
+        const data = await usersQueries.findAllQuery(
+            ["Avatars", "Images", "Roles"],
+            [],
+            params
+        )
+        if (data) {
+            return res.status(200).json(data)
         } else {
-            response.status(500).json({ message: `Faile to get users` })
+            return res.status(404).json({ message: "No Data" })
         }
     },
-
-    getUserById: async (request, response) => {
-        const id = parseInt(request.params.id)
-        const user = await findOneUserQuery({ id })
+    getById: async (req, res) => {
+        const id = req.params.id
+        const user = await usersQueries.findByIdQuery(
+            id,
+            ["Avatars", "Images", "Roles"],
+            []
+        )
         if (user) {
-            response.status(200).json({ user })
+            res.status(200).json({ user })
         } else {
-            response
-                .status(404)
-                .json({ message: `User not found with ID: ${id}` })
+            res.status(404).json({ message: `User not found with ID: ${id}` })
         }
     },
-
-    getUserByUsername: async (request, response) => {
-        const username = request.params.username
-        const user = await findOneUserQuery({ username })
+    getByUsername: async (req, res) => {
+        const username = req.params.username
+        const user = await usersQueries.findOneQuery(
+            { username },
+            ["Avatars", "Images", "Roles"],
+            []
+        )
         if (user) {
-            response.status(200).json({ user })
+            res.status(200).json({ user })
         } else {
-            response
-                .status(404)
-                .json({ message: `User not found with ID: ${username}` })
+            res.status(404).json({
+                message: `User not found with ID: ${username}`,
+            })
         }
     },
-
-    getUserByEmail: async (request, response) => {
-        const email = parseInt(request.params.email)
-        const user = await findOneUserQuery({ email })
+    getByEmail: async (req, res) => {
+        const email = parseInt(req.params.email)
+        const user = await usersQueries.findOneQuery(
+            { email },
+            ["Avatars", "Images", "Roles"],
+            []
+        )
         if (user) {
-            response.status(200).json({ user })
+            res.status(200).json({ user })
         } else {
-            response.status(404).json({
+            res.status(404).json({
                 message: `User not found with email: ${email}`,
             })
         }
     },
-
-    create: async (request, response, next) => {
+    create: async (req, res, next) => {
         const {
             firstName,
             lastName,
@@ -65,9 +82,9 @@ export default {
             password,
             age,
             gender,
-        } = request.body
+        } = req.body
 
-        const userData = {
+        const data = {
             firstName,
             lastName,
             username,
@@ -75,43 +92,41 @@ export default {
             email,
             password,
             gender,
+            age: null,
+            passwordHash: null,
+            passwordSalt: null,
         }
-        userData.age = Number(age)
+        data.age = Number(age)
 
-        const hashedPassword = genPassword(userData.password)
-        userData.passwordHash = hashedPassword.hash
-        userData.passwordSalt = hashedPassword.salt
+        const hashedPassword = genPassword(data.password)
+        data.passwordHash = hashedPassword.hash
+        data.passwordSalt = hashedPassword.salt
 
-        const isUserValid = validatecreate(userData)
+        const isUserValid = validateCreate(data)
 
         if (!isUserValid.valid) {
-            return response.status(401).json({
+            return res.status(401).json({
                 valid: isUserValid.valid,
                 errors: isUserValid.errors,
             })
         }
 
-        const user = await createQuery(userData)
+        const user = await usersQueries.createQuery(data)
 
         if (user) {
-            response.status(201).json({
-                message: `User created with ID: ${user.id}`,
-                user,
-            })
+            res.status(201).json(user)
         } else {
-            response.status(500).json({
+            res.status(500).json({
                 message: `Faile to create a user`,
             })
         }
     },
+    update: async (req, res) => {
+        const id = req.params.id
+        const { session, user } = req
 
-    update: async (request, response) => {
-        const id = parseInt(request.params.id)
-        const { session, user } = request
-
-        const { firstName, lastName, username, email, password, age, gender } =
-            request.body
-        const userData = {
+        const { firstName, lastName, username, age, gender } = req.body
+        const data = {
             firstName,
             lastName,
             username,
@@ -119,144 +134,137 @@ export default {
             gender,
         }
 
-        userData.age = Number(userData.age)
+        data.age = Number(data.age)
 
-        const isUserValid = validateupdate(userData)
+        const isUserValid = validateUpdate(data)
 
         if (!isUserValid.valid) {
-            return response.status(401).json({
+            return res.status(401).json({
                 valid: isUserValid.valid,
                 errors: isUserValid.errors,
             })
         }
 
-        const updatedUser = await updateQuery(userData, { id })
+        const updatedUser = await usersQueries.updateOneQuery({ id }, data)
         if (updatedUser) {
-            response.status(200).json({
+            res.status(200).json({
                 message: `User updated with ID: ${user.id}`,
                 updatedUser,
             })
         } else {
-            response.status(500).json({
+            res.status(500).json({
                 message: `Faile to update a user, ${id}`,
             })
         }
     },
+    updateEmail: async (req, res) => {
+        const id = parseInt(req.params.id)
+        const { session, user } = req
 
-    updateEmail: async (request, response) => {
-        const id = parseInt(request.params.id)
-        const { session, user } = request
-
-        const { email } = request.body
-        const userData = {
+        const { email } = req.body
+        const data = {
             email,
         }
 
-        const isUserValid = validateupdateEmail(userData)
+        const isUserValid = validateUpdateEmail(data)
 
         if (!isUserValid.valid) {
-            return response.status(401).json({
+            return res.status(401).json({
                 valid: isUserValid.valid,
                 errors: isUserValid.errors,
             })
         }
-        const updatedUser = await updateQuery(userData, { id })
+        const updatedUser = await usersQueries.updateOneQuery({ id }, data)
         if (updatedUser) {
-            response.status(200).json({
+            res.status(200).json({
                 message: `User updated with ID: ${user.id}`,
                 data: updatedUser,
             })
         } else {
-            response.status(500).json({
+            res.status(500).json({
                 message: `Faile to update a user, ${id}`,
             })
         }
     },
-
-    updatePassword: async (request, response) => {
-        const id = parseInt(request.params.id)
-        const { session, user } = request
+    updatePassword: async (req, res) => {
+        const id = req.params.id
+        const { session, user } = req
         if (user.id !== id) {
-            return response.status(401).json({
+            return res.status(401).json({
                 message: `You are not authorized to update this user`,
             })
         }
 
-        const currentUser = await findOneUserQuery({ id }, false)
+        const currentUser = await usersQueries.findOneQuery(
+            { id },
+            [],
+            ["passwordHash", "passwordSalt"]
+        )
         if (!currentUser) {
-            return response.status(404).json({
+            return res.status(404).json({
                 message: `User not found with ID: ${id}`,
             })
         }
 
-        const { password, newPassword } = request.body
-        const userData = {
+        const { password, newPassword } = req.body
+        const data = {
             password,
             newPassword,
+            passwordHash: null,
+            passwordSalt: null,
         }
 
-        /**
-         * Check if the current password is valid
-         */
-        let isUserValid = validateupdatePassword({
-            ...userData,
+        let isUserValid = validateUpdatePassword({
+            ...data,
             passwordHash: currentUser.passwordHash,
             passwordSalt: currentUser.passwordSalt,
         })
         if (!isUserValid.valid) {
-            return response.status(401).json({
+            return res.status(401).json({
                 valid: isUserValid.valid,
                 errors: isUserValid.errors,
             })
         }
 
-        const newHashedPassword = genPassword(userData.newPassword)
-        userData.passwordHash = newHashedPassword.hash
-        userData.passwordSalt = newHashedPassword.salt
+        const newHashedPassword = genPassword(data.newPassword)
+        data.passwordHash = newHashedPassword.hash
+        data.passwordSalt = newHashedPassword.salt
 
-        /**
-         * Check if the current password is valid
-         */
-        isUserValid = validateupdatePassword(userData)
+        isUserValid = validateUpdatePassword(data)
         if (!isUserValid.valid) {
-            return response.status(401).json({
+            return res.status(401).json({
                 valid: isUserValid.valid,
                 errors: isUserValid.errors,
             })
         }
-
-        /**
-         * Check if the password is correct
-         */
 
         const isPasswordMatch = passwordMatch(
-            userData.password,
+            data.password,
             currentUser.passwordHash,
             currentUser.passwordSalt
         )
         if (!isPasswordMatch) {
-            return response.status(401).json({
+            return res.status(401).json({
                 message: `Password is incorrect`,
             })
         }
 
-        userData.password = userData.newPassword
-        const updatedUser = await updateQuery(userData, { id })
+        data.password = data.newPassword
+        const updatedUser = await usersQueries.updateOneQuery({ id }, data)
         if (updatedUser) {
-            response.status(200).json({
+            res.status(200).json({
                 message: `User updated with ID: ${user.id}`,
                 data: updatedUser,
             })
         } else {
-            response.status(500).json({
+            res.status(500).json({
                 message: `Faile to update a user, ${id}`,
             })
         }
     },
-
-    remove: async (request, response) => {
-        const id = parseInt(request.params.id)
-        await removeQuery({ id })
-        response.status(200).json({ message: `User deleted with ID: ${id}` })
+    remove: async (req, res) => {
+        const id = parseInt(req.params.id)
+        await usersQueries.deleteOneQuery({ id })
+        res.status(200).json({ message: `User deleted with ID: ${id}` })
     },
 }

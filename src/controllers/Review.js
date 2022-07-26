@@ -69,7 +69,7 @@ export default {
             UserId: user.id,
         }
 
-        const isReviewValid = validateCreateReview(reviewData)
+        const isReviewValid = validateCreate(reviewData)
 
         if (!isReviewValid.valid) {
             return response.status(400).json({

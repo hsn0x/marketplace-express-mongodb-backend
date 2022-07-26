@@ -64,7 +64,7 @@ const UpdateUserPasswordSchema = {
 }
 
 export default {
-    validateCreateUser: (userData) => {
+    validateCreate: (userData) => {
         const valid = ajv.validate(CreateUserSchema, userData)
         if (!valid)
             return {
@@ -74,7 +74,7 @@ export default {
         return { valid }
     },
 
-    validateUpdateUser: (userData) => {
+    validateUpdate: (userData) => {
         const valid = ajv.validate(UpdateUserSchema, userData)
         if (!valid)
             return {
@@ -84,7 +84,7 @@ export default {
         return { valid }
     },
 
-    validateUpdateUserEmail: (userData) => {
+    validateUpdateEmail: (userData) => {
         const valid = ajv.validate(UpdateUserEmailSchema, userData)
         if (!valid)
             return {
@@ -94,7 +94,7 @@ export default {
         return { valid }
     },
 
-    validateUpdateUserPassword: (userData) => {
+    validateUpdatePassword: (userData) => {
         const valid = ajv.validate(UpdateUserPasswordSchema, userData)
         if (!valid)
             return {

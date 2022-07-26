@@ -59,7 +59,7 @@ export default {
             ProductId,
         }
 
-        // const isVoteValid = validateCreateVote(voteData);
+        // const isVoteValid = validateCreate(voteData);
 
         // if (!isVoteValid.valid) {
         //     return response.status(400).json({

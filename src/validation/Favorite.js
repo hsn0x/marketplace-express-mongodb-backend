@@ -59,7 +59,7 @@ const UpdateFavoriteSchema = {
 }
 
 export default {
-    validateCreateFavorite: (favoriteData) => {
+    validateCreate: (favoriteData) => {
         const valid = ajv.validate(CreateFavoriteSchema, favoriteData)
         if (!valid)
             return {
@@ -68,7 +68,7 @@ export default {
             }
         return { valid }
     },
-    validateUpdateFavorite: (favoriteData) => {
+    validateUpdate: (favoriteData) => {
         const valid = ajv.validate(UpdateFavoriteSchema, favoriteData)
         if (!valid)
             return {

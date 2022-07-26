@@ -28,7 +28,7 @@ const UpdateCategorySchema = {
     additionalProperties: false,
 }
 export default {
-    validateCreateCategory: (categoryData) => {
+    validateCreate: (categoryData) => {
         const valid = ajv.validate(CreateCategorySchema, categoryData)
         if (!valid)
             return {
@@ -37,7 +37,7 @@ export default {
             }
         return { valid }
     },
-    validateUpdateCategory: (categoryData) => {
+    validateUpdate: (categoryData) => {
         const valid = ajv.validate(UpdateCategorySchema, categoryData)
         if (!valid)
             return {

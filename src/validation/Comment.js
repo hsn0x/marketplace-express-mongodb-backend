@@ -27,7 +27,7 @@ const UpdateCommentSchema = {
 }
 
 export default {
-    validateCreateComment: (commentData) => {
+    validateCreate: (commentData) => {
         const valid = ajv.validate(CreateCommentSchema, commentData)
         if (!valid)
             return {
