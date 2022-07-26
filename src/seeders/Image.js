@@ -3,6 +3,8 @@ import { ImageModel } from "../models/index.js"
 
 export default {
     createFake: async (record) => {
+        console.log(`Creating ${record} fake images...`)
+
         const fakeImages = []
         for (let index = 0; index < record; index++) {
             fakeImages.push({
@@ -22,5 +24,7 @@ export default {
         console.log(comment.commentableId === image.id) // true
 
         console.log(comment.commentableType) // "Image"
+
+        console.log(`Creating ${record} fake images... DONE`)
     },
 }

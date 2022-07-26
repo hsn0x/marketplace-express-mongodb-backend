@@ -10,6 +10,8 @@ import { randomNumber } from "../utils/index.js"
 
 export default {
     createFake: async (record) => {
+        console.log(`Creating ${record} fake categories...`)
+
         const fakeCategoriesImages = []
         const fakeCategoriesAvatars = []
 
@@ -226,5 +228,7 @@ export default {
 
         await ImageModel.bulkSave(fakeCategoriesImages)
         await AvatarModel.bulkSave(fakeCategoriesAvatars)
+
+        console.log(`Creating ${record} fake categories... DONE`)
     },
 }

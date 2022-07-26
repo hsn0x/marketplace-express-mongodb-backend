@@ -17,7 +17,6 @@ export default {
             permissions.push(permission)
         }
         await PermissionModel.bulkSave(permissions)
-        console.log(`Created ${PERMISSIONS.length} permissions`)
 
         for (let index = 0; index < ROLES.length; index++) {
             const ROLE = ROLES[index]
@@ -45,5 +44,7 @@ export default {
                 )
             }
         }
+
+        console.log(`Creating ${PERMISSIONS.length} permissions ... DONE`)
     },
 }

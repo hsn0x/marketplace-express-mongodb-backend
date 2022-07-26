@@ -43,6 +43,6 @@ export default {
 
         await ResourceModel.bulkSave(resources)
 
-        console.log(`Created ${RESOURCES.length} resources`)
+        console.log(`Creating ${RESOURCES.length} resources ... DONE`)
     },
 }

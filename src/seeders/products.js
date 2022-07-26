@@ -15,6 +15,8 @@ import axios from "axios"
 
 export default {
     createFake: async (record) => {
+        console.log(`Creating ${record} fake products...`)
+
         const fakeProducts = []
         const fakeProductImages = []
         const fakeProductReviews = []
@@ -117,5 +119,7 @@ export default {
         await ImageModel.bulkSave(fakeProductImages)
         await CommentModel.bulkSave(fakeProductComments)
         await ReviewModel.bulkSave(fakeProductReviews)
+
+        console.log(`Creating ${record} fake products... DONE`)
     },
 }

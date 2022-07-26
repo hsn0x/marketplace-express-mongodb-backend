@@ -14,6 +14,8 @@ import { marketsQueries, usersQueries } from "../queries/index.js"
 
 export default {
     createFake: async (record) => {
+        console.log(`Creating ${record} fake markets...`)
+
         const fakeMarkets = []
         const fakeMarketImages = []
         const fakeMarketAvatars = []
@@ -153,5 +155,7 @@ export default {
             await CommentModel.bulkSave(fakeMarketComments)
             await ReviewModel.bulkSave(fakeMarketReviews)
         }
+
+        console.log(`Creating ${record} fake markets... DONE`)
     },
 }

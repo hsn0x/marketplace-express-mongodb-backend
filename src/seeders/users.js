@@ -6,6 +6,8 @@ import { rolesQueries, usersQueries } from "../queries/index.js"
 
 export default {
     create: async () => {
+        console.log("Creating real users...")
+
         const hashedPassword = genPassword(ownerConfig.password)
         const passwordHash = hashedPassword.hash
         const passwordSalt = hashedPassword.salt
@@ -39,10 +41,13 @@ export default {
             Avatars: avatar._id,
             Roles: [ADMIN_ROLE._id, MODERATOR_ROLE._id, EDITOR_ROLE._id],
         })
+
+        console.log("Creating real users...")
     },
 
     createFake: async (record) => {
         console.log(`Creating ${record} fake users ...`)
+
         const fakeUsers = []
         const fakeImages = []
         const fakeAvatars = []
@@ -86,6 +91,6 @@ export default {
         await AvatarModel.bulkSave(fakeAvatars)
         await UserModel.bulkSave(fakeUsers)
 
-        console.log("Fake users created")
+        console.log(`${record} fake users created!`)
     },
 }
