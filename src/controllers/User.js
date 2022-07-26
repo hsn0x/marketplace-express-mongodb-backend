@@ -19,7 +19,20 @@ export default {
         }
 
         const data = await usersQueries.findAllQuery(
-            ["Avatars", "Images", "Roles"],
+            [
+                "Avatars",
+                "Images",
+                "Roles",
+                "Markets",
+                "Products",
+                "Categories",
+                "Posts",
+                "Likes",
+                "Votes",
+                "Favorites",
+                "Comments",
+                "Reviews",
+            ],
             [],
             params
         )
@@ -33,7 +46,20 @@ export default {
         const id = req.params.id
         const user = await usersQueries.findByIdQuery(
             id,
-            ["Avatars", "Images", "Roles"],
+            [
+                "Avatars",
+                "Images",
+                "Roles",
+                "Markets",
+                "Products",
+                "Categories",
+                "Posts",
+                "Likes",
+                "Votes",
+                "Favorites",
+                "Comments",
+                "Reviews",
+            ],
             []
         )
         if (user) {
@@ -46,7 +72,20 @@ export default {
         const username = req.params.username
         const user = await usersQueries.findOneQuery(
             { username },
-            ["Avatars", "Images", "Roles"],
+            [
+                "Avatars",
+                "Images",
+                "Roles",
+                "Markets",
+                "Products",
+                "Categories",
+                "Posts",
+                "Likes",
+                "Votes",
+                "Favorites",
+                "Comments",
+                "Reviews",
+            ],
             []
         )
         if (user) {
@@ -61,7 +100,20 @@ export default {
         const email = parseInt(req.params.email)
         const user = await usersQueries.findOneQuery(
             { email },
-            ["Avatars", "Images", "Roles"],
+            [
+                "Avatars",
+                "Images",
+                "Roles",
+                "Markets",
+                "Products",
+                "Categories",
+                "Posts",
+                "Likes",
+                "Votes",
+                "Favorites",
+                "Comments",
+                "Reviews",
+            ],
             []
         )
         if (user) {

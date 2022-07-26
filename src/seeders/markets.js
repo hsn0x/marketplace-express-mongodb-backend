@@ -10,7 +10,7 @@ import {
 } from "../models/index.js"
 import slugify from "slugify"
 import { randomNumber } from "../utils/index.js"
-import { marketsQueries } from "../queries/index.js"
+import { marketsQueries, usersQueries } from "../queries/index.js"
 
 export const createFakeMarkets = async (record) => {
     const fakeMarkets = []
@@ -38,6 +38,15 @@ export const createFakeMarkets = async (record) => {
                 public_id: faker.random.word(),
                 url,
             })
+
+            await usersQueries.findOneAndUpdate(
+                { _id: randomUser._id },
+                {
+                    $push: {
+                        Images: image._id,
+                    },
+                }
+            )
             tempImages.push(image)
         }
 
@@ -52,6 +61,14 @@ export const createFakeMarkets = async (record) => {
                 public_id: faker.random.word(),
                 url,
             })
+            await usersQueries.findOneAndUpdate(
+                { _id: randomUser._id },
+                {
+                    $push: {
+                        Avatars: avatar._id,
+                    },
+                }
+            )
             tempAvatars.push(avatar)
         }
 
@@ -73,6 +90,16 @@ export const createFakeMarkets = async (record) => {
                 User: randomUser._id,
             })
 
+            await usersQueries.findOneAndUpdate(
+                { _id: randomUser._id },
+                {
+                    $push: {
+                        Reviews: review._id,
+                        Comments: comment._id,
+                    },
+                }
+            )
+
             tempReviews.push(review)
             tempComments.push(comment)
         }
@@ -81,6 +108,7 @@ export const createFakeMarkets = async (record) => {
             faker.random.word() + faker.random.word() + faker.random.word()
         const username =
             faker.random.word() + faker.random.word() + faker.random.word()
+
         const market = new MarketModel({
             name,
             username,
@@ -97,6 +125,15 @@ export const createFakeMarkets = async (record) => {
             Comments: tempComments.map((comment) => comment._id),
             Reviews: tempReviews.map((review) => review._id),
         })
+
+        await usersQueries.findOneAndUpdate(
+            { _id: randomUser._id },
+            {
+                $push: {
+                    Markets: market._id,
+                },
+            }
+        )
 
         tempImages.forEach((image) => image.Markets.push(market._id))
         tempAvatars.forEach((avatar) => avatar.Markets.push(market._id))

@@ -10,7 +10,7 @@ import {
 } from "../models/index.js"
 import { randomNumber } from "../utils/index.js"
 import slugify from "slugify"
-import { productsQueries } from "../queries/index.js"
+import { productsQueries, usersQueries } from "../queries/index.js"
 import axios from "axios"
 
 export const createFakeProducts = async (record) => {
@@ -61,6 +61,16 @@ export const createFakeProducts = async (record) => {
                 User: randomUser._id,
             })
 
+            await usersQueries.findOneAndUpdate(
+                { _id: randomUser._id },
+                {
+                    $push: {
+                        Reviews: review._id,
+                        Comments: comment._id,
+                    },
+                }
+            )
+
             tempReviews.push(review)
             tempComments.push(comment)
         }
@@ -81,6 +91,15 @@ export const createFakeProducts = async (record) => {
             Comments: tempComments.map((comment) => comment._id),
             Reviews: tempReviews.map((review) => review._id),
         })
+
+        await usersQueries.findOneAndUpdate(
+            { _id: randomUser._id },
+            {
+                $push: {
+                    Products: product._id,
+                },
+            }
+        )
 
         tempImages.forEach((image) => image.Products.push(product._id))
 
