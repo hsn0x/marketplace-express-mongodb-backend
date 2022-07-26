@@ -8,7 +8,7 @@ export default {
             return res.status(400).json({ message: "Username is required" })
         }
 
-        const isUsernameTaken = await findOneReviewQuery({ username })
+        const isUsernameTaken = await findOneQuery({ username })
         if (isUsernameTaken) {
             return res.status(401).json({
                 message: `Username ${username} is already taken`,

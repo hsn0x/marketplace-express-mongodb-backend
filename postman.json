@@ -10,7 +10,7 @@
             "name": "users",
             "item": [
                 {
-                    "name": "getUsers",
+                    "name": "getAll",
                     "protocolProfileBehavior": {
                         "disableBodyPruning": true
                     },
@@ -31,7 +31,7 @@
                     "response": []
                 },
                 {
-                    "name": "getUserById",
+                    "name": "getById",
                     "request": {
                         "method": "GET",
                         "header": [],
@@ -45,7 +45,7 @@
                     "response": []
                 },
                 {
-                    "name": "getUserByUsername",
+                    "name": "getByUsername",
                     "request": {
                         "method": "GET",
                         "header": [],
@@ -494,7 +494,7 @@
             "name": "comments",
             "item": [
                 {
-                    "name": "getComments",
+                    "name": "getAll",
                     "protocolProfileBehavior": {
                         "disableBodyPruning": true
                     },
@@ -515,7 +515,7 @@
                     "response": []
                 },
                 {
-                    "name": "getCommentsById",
+                    "name": "getAllById",
                     "protocolProfileBehavior": {
                         "disableBodyPruning": true
                     },
@@ -611,7 +611,7 @@
             "name": "reviews",
             "item": [
                 {
-                    "name": "getReviews",
+                    "name": "getAll",
                     "protocolProfileBehavior": {
                         "disableBodyPruning": true
                     },
@@ -632,7 +632,7 @@
                     "response": []
                 },
                 {
-                    "name": "getReviewById",
+                    "name": "getById",
                     "request": {
                         "method": "GET",
                         "header": [],
@@ -1072,7 +1072,7 @@
             "name": "categories",
             "item": [
                 {
-                    "name": "getCategories",
+                    "name": "getAll",
                     "protocolProfileBehavior": {
                         "disableBodyPruning": true
                     },
@@ -1109,7 +1109,7 @@
                     "response": []
                 },
                 {
-                    "name": "getCategoryById",
+                    "name": "getById",
                     "request": {
                         "method": "GET",
                         "header": [],
@@ -1123,7 +1123,7 @@
                     "response": []
                 },
                 {
-                    "name": "getCategoryByName",
+                    "name": "getByName",
                     "request": {
                         "method": "GET",
                         "header": [],
@@ -1137,7 +1137,7 @@
                     "response": []
                 },
                 {
-                    "name": "getCategoryByType",
+                    "name": "getByType",
                     "request": {
                         "method": "GET",
                         "header": [],

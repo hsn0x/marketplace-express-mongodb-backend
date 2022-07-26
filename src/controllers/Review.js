@@ -30,7 +30,7 @@ export default {
     },
     getById: async (request, response) => {
         const id = parseInt(request.params.id)
-        const review = await findOneReviewQuery({ id })
+        const review = await findOneQuery({ id })
         if (review) {
             response.status(200).json({
                 message: `Review found with ID: ${id}`,
@@ -44,7 +44,7 @@ export default {
     },
     getByName: async (request, response) => {
         const slug = request.params.slug
-        const review = await findOneReviewQuery({ slug })
+        const review = await findOneQuery({ slug })
         if (review) {
             response.status(200).json({
                 message: `Review found with ID: ${slug}`,
@@ -78,7 +78,7 @@ export default {
             })
         }
 
-        const createdReview = await createReviewQuery(reviewData)
+        const createdReview = await createQuery(reviewData)
 
         if (createdReview) {
             return response.status(201).json({
@@ -109,7 +109,7 @@ export default {
             response.status(400).json({ message: "Review not updated" })
         }
 
-        const updatedReview = await updateReviewQuery(reviewData, { id })
+        const updatedReview = await updateQuery(reviewData, { id })
 
         if (updatedReview) {
             response.status(200).json({
@@ -125,7 +125,7 @@ export default {
 
     deleteReview: async (request, response) => {
         const id = parseInt(request.params.id)
-        await deleteReviewQuery({ id })
+        await deleteQuery({ id })
         response.status(200).json({ message: `Review deleted with ID: ${id}` })
     },
 }

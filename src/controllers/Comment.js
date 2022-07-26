@@ -3,7 +3,7 @@ import { CommentValidation } from "../validation/index.js"
 
 export default {
     getAll: async (request, response) => {
-        const comments = await findAllCommentsQuery()
+        const comments = await commentsQueries.findAllQuery()
         if (comments) {
             response.status(200).json({
                 message: `Comments found`,
@@ -16,7 +16,9 @@ export default {
     getAllBySearch: async (request, response) => {
         const query = request.params.query
 
-        const comments = await findAllCommentsBySearchQuery({ query })
+        const comments = await commentsQueries.findAllCommentsBySearchQuery({
+            query,
+        })
         if (comments) {
             return response.status(200).json({
                 message: `Comments found with query: ${query}, `,
@@ -31,7 +33,7 @@ export default {
     },
     getById: async (request, response) => {
         const id = parseInt(request.params.id)
-        const comment = await findOneQuery({ id })
+        const comment = await commentsQueries.findOneQuery({ id })
         if (comment) {
             response.status(200).json({
                 message: `Comment found with ID: ${id}`,
@@ -45,7 +47,7 @@ export default {
     },
     getByName: async (request, response) => {
         const slug = request.params.slug
-        const comment = await findOneQuery({ slug })
+        const comment = await commentsQueries.findOneQuery({ slug })
         if (comment) {
             response.status(200).json({
                 message: `Comment found with ID: ${slug}`,
@@ -77,7 +79,7 @@ export default {
             })
         }
 
-        const createdComment = await createQuery(commentData)
+        const createdComment = await commentsQueries.createQuery(commentData)
 
         if (createdComment) {
             return response.status(201).json({
@@ -113,7 +115,9 @@ export default {
             response.status(400).json({ message: "Comment not updated" })
         }
 
-        const updatedComment = await updateQuery(commentData, { id })
+        const updatedComment = await commentsQueries.updateQuery(commentData, {
+            id,
+        })
 
         if (updatedComment) {
             response.status(200).json({
@@ -128,7 +132,7 @@ export default {
     },
     remove: async (request, response) => {
         const id = parseInt(request.params.id)
-        await removeQuery({ id })
+        await commentsQueries.removeQuery({ id })
         response.status(200).json({ message: `Comment deleted with ID: ${id}` })
     },
 }

@@ -5,18 +5,14 @@ import { CategoryMiddleware } from "../middlewares/index.js"
 
 const router = Router()
 
-router.get("/", CategoryController.getCategories)
-router.get("/type/:type", CategoryController.getCategoriesByType)
+router.get("/", CategoryController.getAll)
+router.get("/type/:type", CategoryController.getAllByType)
 router.get(
     "/name/:name",
     CategoryMiddleware.isNameExist,
-    CategoryController.getCategoryByName
+    CategoryController.getByName
 )
-router.get(
-    "/:id",
-    CategoryMiddleware.isExist,
-    CategoryController.getCategoryById
-)
+router.get("/:id", CategoryMiddleware.isExist, CategoryController.getById)
 router.post(
     "/",
     AuthMiddleware.isAuth,

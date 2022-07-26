@@ -3,8 +3,8 @@ import { categoriesQueries } from "../queries/index.js"
 import { CategoryValidation } from "../validation/index.js"
 
 export default {
-    getCategories: async (request, response) => {
-        const categories = await findAllQuery()
+    getAll: async (request, response) => {
+        const categories = await categoriesQueries.findAllQuery()
         if (categories) {
             response.status(200).json({
                 message: `Categories found`,
@@ -15,9 +15,11 @@ export default {
             response.status(404).json({ message: "No categories found" })
         }
     },
-    getCategoriesByType: async (request, response) => {
+    getAllByType: async (request, response) => {
         const type = request.params.type
-        const categories = await findAllCategoriesWhereQuery({ type })
+        const categories = await categoriesQueries.findAllCategoriesWhereQuery({
+            type,
+        })
         if (categories) {
             response.status(200).json({
                 message: `Categories found`,
@@ -28,9 +30,9 @@ export default {
             response.status(404).json({ message: "No categories found" })
         }
     },
-    getCategoryById: async (request, response) => {
+    getById: async (request, response) => {
         const id = parseInt(request.params.id)
-        const category = await findOneCategoryQuery({ id })
+        const category = await categoriesQueries.findOneCategoryQuery({ id })
         if (category) {
             response.status(200).json({
                 message: `Category found with ID: ${id}`,
@@ -42,9 +44,9 @@ export default {
             })
         }
     },
-    getCategoryByName: async (request, response) => {
+    getByName: async (request, response) => {
         const name = request.params.name
-        const category = await findOneCategoryQuery({ name })
+        const category = await categoriesQueries.findOneCategoryQuery({ name })
         if (category) {
             response.status(200).json({
                 message: `Category found with ID: ${name}`,
@@ -69,7 +71,7 @@ export default {
             type,
         }
 
-        const isCategoryValid = validateCreate(categoryData)
+        const isCategoryValid = CategoryValidation.validateCreate(categoryData)
 
         if (!isCategoryValid.valid) {
             return response.status(400).json({
@@ -78,7 +80,9 @@ export default {
             })
         }
 
-        const createdCategory = await createQuery(categoryData)
+        const createdCategory = await categoriesQueries.createQuery(
+            categoryData
+        )
 
         if (createdCategory) {
             return response.status(201).json({
@@ -102,13 +106,16 @@ export default {
             title,
         }
 
-        const isCategoryValid = validateUpdate(categoryData)
+        const isCategoryValid = CategoryValidation.validateUpdate(categoryData)
 
         if (!isCategoryValid) {
             response.status(400).json({ message: "Category not updated" })
         }
 
-        const updatedCategory = await updateQuery(categoryData, { id })
+        const updatedCategory = await categoriesQueries.updateQuery(
+            categoryData,
+            { id }
+        )
 
         if (updatedCategory) {
             response.status(200).json({
@@ -123,7 +130,7 @@ export default {
     },
     remove: async (request, response) => {
         const id = parseInt(request.params.id)
-        await removeQuery({ id })
+        await categoriesQueries.removeQuery({ id })
         response
             .status(200)
             .json({ message: `Category deleted with ID: ${id}` })
