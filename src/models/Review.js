@@ -17,14 +17,14 @@ const schema = Schema(
             type: String,
             required: true,
         },
-        Product: {
-            type: Schema.Types.ObjectId,
-            ref: "Product",
-        },
 
         User: {
             type: Schema.Types.ObjectId,
             ref: "User",
+        },
+        Product: {
+            type: Schema.Types.ObjectId,
+            ref: "Product",
         },
         Market: {
             type: Schema.Types.ObjectId,

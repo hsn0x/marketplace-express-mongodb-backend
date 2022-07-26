@@ -1,4 +1,8 @@
-import { productsQueries } from "../queries/index.js"
+import {
+    categoriesQueries,
+    productsQueries,
+    usersQueries,
+} from "../queries/index.js"
 import { ProductValidation } from "../validation/index.js"
 
 export default {
@@ -9,7 +13,7 @@ export default {
             res.status(200).json(data)
         } else {
             res.status(404).json({
-                message: `Product not found with ID: ${id}`,
+                message: `Record not found with ID: ${id}`,
             })
         }
     },
@@ -20,7 +24,7 @@ export default {
             res.status(200).json(data)
         } else {
             res.status(404).json({
-                message: `Product not found with ID: ${slug}`,
+                message: `Record not found with ID: ${slug}`,
             })
         }
     },
@@ -135,7 +139,6 @@ export default {
             Categories,
             User: user.id,
         }
-        console.log({ data })
 
         const isValid = ProductValidation.validateCreate(data)
 
@@ -146,13 +149,29 @@ export default {
             })
         }
 
-        const createdProduct = await productsQueries.createQuery(data)
+        const createdRecord = await productsQueries.createQuery(data)
 
-        if (createdProduct) {
-            return res.status(201).json({
-                message: `Product added with ID: ${createdProduct.id}`,
-                data: createdProduct,
-            })
+        await usersQueries.findOneAndUpdate(
+            { _id: user.id },
+            {
+                $push: {
+                    Products: createdRecord._id,
+                },
+            }
+        )
+        Categories.forEach(async (categoryId) => {
+            await categoriesQueries.findOneAndUpdate(
+                { _id: categoryId },
+                {
+                    $push: {
+                        Products: createdRecord._id,
+                    },
+                }
+            )
+        })
+
+        if (createdRecord) {
+            return res.status(201).json(createdRecord)
         } else {
             return res
                 .status(500)
@@ -165,8 +184,8 @@ export default {
 
         const {
             title,
-            description,
             about,
+            description,
             price,
             quantity,
             Market,
@@ -174,10 +193,10 @@ export default {
         } = req.body
         const data = {
             title,
-            description,
             about,
-            price,
-            quantity,
+            description,
+            price: Number(price),
+            quantity: Number(quantity),
             Market,
             Categories,
             User: user.id,
@@ -191,14 +210,14 @@ export default {
             })
         }
 
-        const updatedProduct = await productsQueries.updateOneQuery(
+        const updatedRecord = await productsQueries.updateOneQuery(
             { _id: id },
             data
         )
-        if (updatedProduct) {
+        if (updatedRecord) {
             return res.status(200).json({
-                message: `Product updated with ID: ${updatedProduct[0]?.id}`,
-                data: updatedProduct,
+                message: `Record updated with ID: ${updatedRecord.id}`,
+                data: updatedRecord,
             })
         } else {
             return res.status(500).json({
@@ -209,6 +228,6 @@ export default {
     remove: async (req, res) => {
         const id = req.params.id
         await productsQueries.deleteOneQuery({ _id: id })
-        res.status(200).json({ message: `Product deleted with ID: ${id}` })
+        res.status(200).json({ message: `Record deleted with ID: ${id}` })
     },
 }

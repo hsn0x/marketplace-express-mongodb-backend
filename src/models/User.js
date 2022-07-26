@@ -102,7 +102,7 @@ const schema = mongoose.Schema(
         Favorites: [
             {
                 type: Schema.Types.ObjectId,
-                ref: "Favroite",
+                ref: "Favorite",
             },
         ],
 

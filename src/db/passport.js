@@ -11,6 +11,15 @@ passport.deserializeUser(async (userId, done) => {
             "Avatars",
             "Images",
             "Roles",
+            "Markets",
+            "Products",
+            "Categories",
+            "Posts",
+            "Likes",
+            "Votes",
+            "Favorites",
+            "Comments",
+            "Reviews",
         ])
         done(null, user)
     } catch (error) {
