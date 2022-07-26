@@ -6,12 +6,25 @@ import { VoteMiddleware } from "../middlewares/index.js"
 const router = Router()
 
 router.get("/", VoteController.getAll)
-router.get("/:id", VoteController.getById)
-router.post("/", AuthMiddleware.isAuth, VoteController.create)
-router.put("/", AuthMiddleware.isAuth, VoteController.update)
+router.post(
+    "/",
+    AuthMiddleware.isAuth,
+    VoteMiddleware.isNotExist,
+    VoteController.create
+)
+
+router.get("/:id", VoteMiddleware.isIdValid, VoteController.getById)
+router.put(
+    "/:id",
+    VoteMiddleware.isIdValid,
+    AuthMiddleware.isAuth,
+    VoteController.update
+)
 router.delete(
     "/:id",
     AuthMiddleware.isAuth,
+    VoteMiddleware.isIdValid,
+    VoteMiddleware.isExist,
     VoteMiddleware.isOwner,
     VoteController.remove
 )

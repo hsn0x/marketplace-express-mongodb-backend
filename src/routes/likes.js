@@ -6,12 +6,25 @@ import { LikeMiddleware } from "../middlewares/index.js"
 const router = Router()
 
 router.get("/", LikeController.getAll)
-router.get("/:id", LikeController.getById)
-router.post("/", AuthMiddleware.isAuth, LikeController.create)
-router.put("/", AuthMiddleware.isAuth, LikeController.update)
+router.post(
+    "/",
+    AuthMiddleware.isAuth,
+    LikeMiddleware.isNotExist,
+    LikeController.create
+)
+
+router.get("/:id", LikeMiddleware.isIdValid, LikeController.getById)
+router.put(
+    "/:id",
+    LikeMiddleware.isIdValid,
+    AuthMiddleware.isAuth,
+    LikeController.update
+)
 router.delete(
     "/:id",
     AuthMiddleware.isAuth,
+    LikeMiddleware.isIdValid,
+    LikeMiddleware.isExist,
     LikeMiddleware.isOwner,
     LikeController.remove
 )

@@ -6,12 +6,25 @@ import { FavoriteMiddleware } from "../middlewares/index.js"
 const router = Router()
 
 router.get("/", FavoriteController.getAll)
-router.get("/:id", FavoriteController.getById)
-router.post("/", AuthMiddleware.isAuth, FavoriteController.create)
-router.put("/", AuthMiddleware.isAuth, FavoriteController.update)
+router.post(
+    "/",
+    AuthMiddleware.isAuth,
+    FavoriteMiddleware.isNotExist,
+    FavoriteController.create
+)
+
+router.get("/:id", FavoriteMiddleware.isIdValid, FavoriteController.getById)
+router.put(
+    "/:id",
+    AuthMiddleware.isAuth,
+    FavoriteMiddleware.isIdValid,
+    FavoriteController.update
+)
 router.delete(
     "/:id",
     AuthMiddleware.isAuth,
+    FavoriteMiddleware.isIdValid,
+    FavoriteMiddleware.isExist,
     FavoriteMiddleware.isOwner,
     FavoriteController.remove
 )

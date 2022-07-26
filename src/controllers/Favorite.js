@@ -103,24 +103,11 @@ export default {
     create: async (req, res, next) => {
         const { session, user } = req
 
-        const {
-            title,
-            about,
-            description,
-            price,
-            quantity,
-            Market,
-            Categories,
-        } = req.body
+        const { Product, Market } = req.body
         const data = {
-            title,
-            about,
-            description,
-            price: Number(price),
-            quantity: Number(quantity),
-            Market,
-            Categories,
             User: user.id,
+            Product,
+            Market,
         }
 
         const isValid = FavoriteValidation.validateCreate(data)
@@ -142,16 +129,6 @@ export default {
                 },
             }
         )
-        Categories.forEach(async (categoryId) => {
-            await categoriesQueries.findOneAndUpdate(
-                { _id: categoryId },
-                {
-                    $push: {
-                        Favorites: createdRecord._id,
-                    },
-                }
-            )
-        })
 
         if (createdRecord) {
             return res.status(201).json(createdRecord)
@@ -163,24 +140,11 @@ export default {
         const id = req.params.id
         const { session, user } = req
 
-        const {
-            title,
-            about,
-            description,
-            price,
-            quantity,
-            Market,
-            Categories,
-        } = req.body
+        const { Product, Market } = req.body
         const data = {
-            title,
-            about,
-            description,
-            price: Number(price),
-            quantity: Number(quantity),
-            Market,
-            Categories,
             User: user.id,
+            Product,
+            Market,
         }
 
         const isValid = FavoriteValidation.validateUpdate(data)

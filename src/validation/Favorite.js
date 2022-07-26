@@ -2,65 +2,48 @@ import Ajv from "ajv"
 
 const ajv = new Ajv()
 
-const CreateFavoriteSchema = {
+const CreateSchema = {
     type: "object",
     properties: {
-        name: { type: "string" },
-        username: { type: "string" },
-        title: { type: "string" },
-        description: { type: "string" },
-        about: { type: "string" },
-        CategoriesIds: {
-            type: "array",
-            items: {
-                type: "number",
-            },
+        Product: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
         },
-        UserId: { type: "number" },
+        Market: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
+        User: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
     },
-    required: [
-        "name",
-        "username",
-        "title",
-        "description",
-        "about",
-        "CategoriesIds",
-        "UserId",
-    ],
+    required: ["User"],
     additionalProperties: false,
 }
 
-const UpdateFavoriteSchema = {
+const UpdateSchema = {
     type: "object",
     properties: {
-        name: { type: "string" },
-        username: { type: "string" },
-        title: { type: "string" },
-        description: { type: "string" },
-        about: { type: "string" },
-        CategoriesIds: {
-            type: "array",
-            items: {
-                type: "number",
-            },
+        Product: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
         },
-        UserId: { type: "number" },
+        Market: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
+        User: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
     },
-    required: [
-        "name",
-        "username",
-        "title",
-        "description",
-        "about",
-        "CategoriesIds",
-        "UserId",
-    ],
+    required: ["User"],
     additionalProperties: false,
 }
-
 export default {
-    validateCreate: (favoriteData) => {
-        const valid = ajv.validate(CreateFavoriteSchema, favoriteData)
+    validateCreate: (data) => {
+        const valid = ajv.validate(CreateSchema, data)
         if (!valid)
             return {
                 valid,
@@ -68,8 +51,8 @@ export default {
             }
         return { valid }
     },
-    validateUpdate: (favoriteData) => {
-        const valid = ajv.validate(UpdateFavoriteSchema, favoriteData)
+    validateUpdate: (data) => {
+        const valid = ajv.validate(UpdateSchema, data)
         if (!valid)
             return {
                 valid,

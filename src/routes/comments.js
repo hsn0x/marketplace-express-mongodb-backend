@@ -5,10 +5,12 @@ import { CommentMiddleware } from "../middlewares/index.js"
 
 const router = Router()
 
-router.get("/", CommentController.getAll)
 router.get("/:id", CommentMiddleware.isIdValid, CommentController.getById)
-router.get("/q/:query", CommentController.getAllBySearch)
 router.get("/name/:slug", CommentController.getBySlug)
+
+router.get("/", CommentController.getAll)
+router.get("/q/:query", CommentController.getAllBySearch)
+
 router.post("/", AuthMiddleware.isAuth, CommentController.create)
 router.put(
     "/:id",

@@ -27,6 +27,7 @@ const UpdateReviewSchema = {
     required: ["rate", "title", "content", "productId", "UserId"],
     additionalProperties: false,
 }
+
 export default {
     validateCreate: (reviewData) => {
         const valid = ajv.validate(CreateReviewSchema, reviewData)

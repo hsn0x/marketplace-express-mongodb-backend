@@ -103,24 +103,11 @@ export default {
     create: async (req, res, next) => {
         const { session, user } = req
 
-        const {
-            title,
-            about,
-            description,
-            price,
-            quantity,
-            Market,
-            Categories,
-        } = req.body
+        const { Product, Market } = req.body
         const data = {
-            title,
-            about,
-            description,
-            price: Number(price),
-            quantity: Number(quantity),
-            Market,
-            Categories,
             User: user.id,
+            Product,
+            Market,
         }
 
         const isValid = LikeValidation.validateCreate(data)
@@ -142,16 +129,6 @@ export default {
                 },
             }
         )
-        Categories.forEach(async (categoryId) => {
-            await categoriesQueries.findOneAndUpdate(
-                { _id: categoryId },
-                {
-                    $push: {
-                        Likes: createdRecord._id,
-                    },
-                }
-            )
-        })
 
         if (createdRecord) {
             return res.status(201).json(createdRecord)

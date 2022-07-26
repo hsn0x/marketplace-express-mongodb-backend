@@ -109,6 +109,7 @@ export default {
             description,
             price,
             quantity,
+
             Market,
             Categories,
         } = req.body
