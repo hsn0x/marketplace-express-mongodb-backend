@@ -8,7 +8,38 @@ import { MarketValidation } from "../validation/index.js"
 export default {
     getById: async (req, res) => {
         const id = req.params.id
-        const data = await marketsQueries.findByIdQuery(id)
+        const data = await marketsQueries.findByIdQuery(id, [
+            {
+                path: "Avatars",
+            },
+            {
+                path: "Images",
+            },
+
+            {
+                path: "Products",
+            },
+            {
+                path: "Categories",
+            },
+
+            {
+                path: "Likes",
+            },
+            {
+                path: "Votes",
+            },
+            {
+                path: "Favorites",
+            },
+
+            {
+                path: "Comments",
+            },
+            {
+                path: "Reviews",
+            },
+        ])
         if (data) {
             res.status(200).json(data)
         } else {
@@ -19,7 +50,38 @@ export default {
     },
     getBySlug: async (req, res) => {
         const slug = req.params.slug
-        const data = await marketsQueries.findOneQuery({ slug })
+        const data = await marketsQueries.findOneQuery({ slug }, [
+            {
+                path: "Avatars",
+            },
+            {
+                path: "Images",
+            },
+
+            {
+                path: "Products",
+            },
+            {
+                path: "Categories",
+            },
+
+            {
+                path: "Likes",
+            },
+            {
+                path: "Votes",
+            },
+            {
+                path: "Favorites",
+            },
+
+            {
+                path: "Comments",
+            },
+            {
+                path: "Reviews",
+            },
+        ])
         if (data) {
             res.status(200).json(data)
         } else {

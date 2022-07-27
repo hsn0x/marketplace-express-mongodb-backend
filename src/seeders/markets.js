@@ -145,7 +145,10 @@ export default {
             tempReviews.forEach((review) => (review.Market = market._id))
 
             fakeMarkets.push(market)
+
             fakeMarketImages.push(...tempImages)
+            fakeMarketAvatars.push(...tempAvatars)
+
             fakeMarketReviews.push(...tempReviews)
             fakeMarketComments.push(...tempComments)
 
