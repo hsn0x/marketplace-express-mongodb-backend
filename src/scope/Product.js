@@ -5,17 +5,6 @@ export default {
         },
 
         {
-            path: "User",
-        },
-
-        {
-            path: "Comments",
-        },
-        {
-            path: "Reviews",
-        },
-
-        {
             path: "Categories",
         },
 
@@ -27,6 +16,37 @@ export default {
         },
         {
             path: "Favorites",
+        },
+
+        {
+            path: "User",
+        },
+
+        {
+            path: "Comments",
+            populate: [
+                {
+                    path: "User",
+                    populate: [
+                        {
+                            path: "Avatars",
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            path: "Reviews",
+            populate: [
+                {
+                    path: "User",
+                    populate: [
+                        {
+                            path: "Avatars",
+                        },
+                    ],
+                },
+            ],
         },
         {
             path: "Market",
