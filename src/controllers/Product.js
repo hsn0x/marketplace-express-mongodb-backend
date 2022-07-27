@@ -3,12 +3,13 @@ import {
     productsQueries,
     usersQueries,
 } from "../queries/index.js"
+import { ProductScope } from "../scope/index.js"
 import { ProductValidation } from "../validation/index.js"
 
 export default {
     getById: async (req, res) => {
         const id = req.params.id
-        const data = await productsQueries.findByIdQuery(id)
+        const data = await productsQueries.findByIdQuery(id, ProductScope.all)
         if (data) {
             res.status(200).json(data)
         } else {
@@ -19,7 +20,10 @@ export default {
     },
     getBySlug: async (req, res) => {
         const slug = req.params.slug
-        const data = await productsQueries.findOneQuery({ slug })
+        const data = await productsQueries.findOneQuery(
+            { slug },
+            ProductScope.all
+        )
         if (data) {
             res.status(200).json(data)
         } else {
@@ -38,26 +42,7 @@ export default {
 
         const data = await productsQueries.findAllQuery(
             {},
-            [
-                {
-                    path: "Market",
-                },
-                {
-                    path: "User",
-                },
-                {
-                    path: "Images",
-                },
-                {
-                    path: "Comments",
-                },
-                {
-                    path: "Reviews",
-                },
-                {
-                    path: "Categories",
-                },
-            ],
+            ProductScope.all,
             [],
             params
         )
@@ -81,7 +66,12 @@ export default {
             size: parseInt(size),
         }
 
-        const data = await productsQueries.findAllQuery(filter, [], [], params)
+        const data = await productsQueries.findAllQuery(
+            filter,
+            ProductScope.all,
+            [],
+            params
+        )
         if (data) {
             return res.status(200).json(data)
         } else {
@@ -100,7 +90,12 @@ export default {
             size: parseInt(size),
         }
 
-        const data = await productsQueries.findAllQuery(filter, [], [], params)
+        const data = await productsQueries.findAllQuery(
+            filter,
+            ProductScope.all,
+            [],
+            params
+        )
         if (data) {
             return res.status(200).json(data)
         } else {
@@ -116,7 +111,12 @@ export default {
             size: parseInt(size),
         }
 
-        const data = await productsQueries.findAllQuery(filter, [], [], params)
+        const data = await productsQueries.findAllQuery(
+            filter,
+            ProductScope.all,
+            [],
+            params
+        )
         if (data) {
             return res.status(200).json(data)
         } else {

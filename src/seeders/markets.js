@@ -107,10 +107,8 @@ export default {
                 tempComments.push(comment)
             }
 
-            const name =
-                faker.random.word() + faker.random.word() + faker.random.word()
-            const username =
-                faker.random.word() + faker.random.word() + faker.random.word()
+            const name = faker.random.word() + faker.random.word()
+            const username = faker.random.word() + faker.random.word()
 
             const market = new MarketModel({
                 name,

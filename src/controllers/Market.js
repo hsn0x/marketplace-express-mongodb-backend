@@ -3,43 +3,13 @@ import {
     marketsQueries,
     usersQueries,
 } from "../queries/index.js"
+import { MarketScope } from "../scope/index.js"
 import { MarketValidation } from "../validation/index.js"
 
 export default {
     getById: async (req, res) => {
         const id = req.params.id
-        const data = await marketsQueries.findByIdQuery(id, [
-            {
-                path: "Avatars",
-            },
-            {
-                path: "Images",
-            },
-
-            {
-                path: "Products",
-            },
-            {
-                path: "Categories",
-            },
-
-            {
-                path: "Likes",
-            },
-            {
-                path: "Votes",
-            },
-            {
-                path: "Favorites",
-            },
-
-            {
-                path: "Comments",
-            },
-            {
-                path: "Reviews",
-            },
-        ])
+        const data = await marketsQueries.findByIdQuery(id, MarketScope.all)
         if (data) {
             res.status(200).json(data)
         } else {
@@ -50,38 +20,10 @@ export default {
     },
     getBySlug: async (req, res) => {
         const slug = req.params.slug
-        const data = await marketsQueries.findOneQuery({ slug }, [
-            {
-                path: "Avatars",
-            },
-            {
-                path: "Images",
-            },
-
-            {
-                path: "Products",
-            },
-            {
-                path: "Categories",
-            },
-
-            {
-                path: "Likes",
-            },
-            {
-                path: "Votes",
-            },
-            {
-                path: "Favorites",
-            },
-
-            {
-                path: "Comments",
-            },
-            {
-                path: "Reviews",
-            },
-        ])
+        const data = await marketsQueries.findOneQuery(
+            { slug },
+            MarketScope.all
+        )
         if (data) {
             res.status(200).json(data)
         } else {
@@ -100,38 +42,7 @@ export default {
 
         const data = await marketsQueries.findAllQuery(
             {},
-            [
-                {
-                    path: "Avatars",
-                },
-                {
-                    path: "Images",
-                },
-
-                {
-                    path: "Products",
-                },
-                {
-                    path: "Categories",
-                },
-
-                {
-                    path: "Likes",
-                },
-                {
-                    path: "Votes",
-                },
-                {
-                    path: "Favorites",
-                },
-
-                {
-                    path: "Comments",
-                },
-                {
-                    path: "Reviews",
-                },
-            ],
+            MarketScope.all,
             [],
             params
         )
@@ -155,7 +66,12 @@ export default {
             size: parseInt(size),
         }
 
-        const data = await marketsQueries.findAllQuery(filter, [], [], params)
+        const data = await marketsQueries.findAllQuery(
+            filter,
+            MarketScope.all,
+            [],
+            params
+        )
         if (data) {
             return res.status(200).json(data)
         } else {
@@ -174,24 +90,12 @@ export default {
             size: parseInt(size),
         }
 
-        const data = await marketsQueries.findAllQuery(filter, [], [], params)
-        if (data) {
-            return res.status(200).json(data)
-        } else {
-            return res.status(404).json({ message: "No Data" })
-        }
-    },
-    getAllByTaskId: async (req, res) => {
-        const TaskId = req.params.id
-        const { page, size } = req.query
-        const filter = { TaskId }
-        const params = {
-            page: parseInt(page),
-            size: parseInt(size),
-        }
-
-        const data = await marketsQueries.findAllQuery(filter, [], [], params)
-
+        const data = await marketsQueries.findAllQuery(
+            filter,
+            MarketScope.all,
+            [],
+            params
+        )
         if (data) {
             return res.status(200).json(data)
         } else {
@@ -207,7 +111,12 @@ export default {
             size: parseInt(size),
         }
 
-        const data = await marketsQueries.findAllQuery(filter, [], [], params)
+        const data = await marketsQueries.findAllQuery(
+            filter,
+            MarketScope.all,
+            [],
+            params
+        )
         if (data) {
             return res.status(200).json(data)
         } else {

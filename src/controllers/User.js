@@ -8,6 +8,7 @@ import {
     RoleModel,
 } from "../models/index.js"
 import { usersQueries } from "../queries/index.js"
+import { UserScope } from "../scope/index.js"
 import { UserValidation } from "../validation/index.js"
 
 export default {
@@ -18,138 +19,7 @@ export default {
             size: parseInt(size),
         }
 
-        const data = await usersQueries.findAllQuery(
-            [
-                {
-                    path: "Avatars",
-                },
-                {
-                    path: "Images",
-                },
-                {
-                    path: "Roles",
-                },
-                {
-                    path: "Markets",
-                    populate: [
-                        {
-                            path: "Avatars",
-                        },
-                        {
-                            path: "Images",
-                        },
-                        {
-                            path: "Roles",
-                        },
-                        {
-                            path: "Markets",
-                            populate: [
-                                {
-                                    path: "Avatars",
-                                },
-                                {
-                                    path: "Images",
-                                },
-
-                                {
-                                    path: "Products",
-                                },
-                                {
-                                    path: "Categories",
-                                },
-
-                                {
-                                    path: "Likes",
-                                },
-                                {
-                                    path: "Votes",
-                                },
-                                {
-                                    path: "Favorites",
-                                },
-
-                                {
-                                    path: "Comments",
-                                },
-                                {
-                                    path: "Reviews",
-                                },
-                            ],
-                        },
-                        {
-                            path: "Products",
-                        },
-                        {
-                            path: "Categories",
-                        },
-                        {
-                            path: "Posts",
-                        },
-                        {
-                            path: "Likes",
-                        },
-                        {
-                            path: "Votes",
-                        },
-                        {
-                            path: "Favorites",
-                        },
-                        {
-                            path: "Comments",
-                        },
-                        {
-                            path: "Reviews",
-                        },
-                    ],
-                },
-                {
-                    path: "Products",
-                    populate: [
-                        {
-                            path: "Market",
-                        },
-                        {
-                            path: "User",
-                        },
-                        {
-                            path: "Images",
-                        },
-                        {
-                            path: "Comments",
-                        },
-                        {
-                            path: "Reviews",
-                        },
-                        {
-                            path: "Categories",
-                        },
-                    ],
-                },
-                {
-                    path: "Categories",
-                },
-                {
-                    path: "Posts",
-                },
-                {
-                    path: "Likes",
-                },
-                {
-                    path: "Votes",
-                },
-                {
-                    path: "Favorites",
-                },
-                {
-                    path: "Comments",
-                },
-                {
-                    path: "Reviews",
-                },
-            ],
-            [],
-            params
-        )
+        const data = await usersQueries.findAllQuery(UserScope.all, [], params)
         if (data) {
             return res.status(200).json(data)
         } else {
@@ -158,24 +28,7 @@ export default {
     },
     getById: async (req, res) => {
         const id = req.params.id
-        const user = await usersQueries.findByIdQuery(
-            id,
-            [
-                "Avatars",
-                "Images",
-                "Roles",
-                "Markets",
-                "Products",
-                "Categories",
-                "Posts",
-                "Likes",
-                "Votes",
-                "Favorites",
-                "Comments",
-                "Reviews",
-            ],
-            []
-        )
+        const user = await usersQueries.findByIdQuery(id, UserScope.all, [])
         if (user) {
             res.status(200).json({ user })
         } else {
