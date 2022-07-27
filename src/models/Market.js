@@ -29,6 +29,11 @@ const schema = Schema(
             type: String,
         },
 
+        User: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
+
         Images: [
             {
                 type: Schema.Types.ObjectId,
@@ -41,6 +46,13 @@ const schema = Schema(
                 ref: "Avatar",
             },
         ],
+        Products: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Product",
+            },
+        ],
+
         Comments: [
             {
                 type: Schema.Types.ObjectId,
@@ -53,16 +65,32 @@ const schema = Schema(
                 ref: "Review",
             },
         ],
+
         Categories: [
             {
                 type: Schema.Types.ObjectId,
                 ref: "Category",
             },
         ],
-        User: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
-        },
+
+        Likes: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Like",
+            },
+        ],
+        Votes: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Vote",
+            },
+        ],
+        Favorites: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Favorite",
+            },
+        ],
     },
     { timestamps: true }
 )

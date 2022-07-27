@@ -1,3 +1,4 @@
+import { getPagination, getPagingData } from "../lib/handlePagination.js"
 import { CategoryModel } from "../models/index.js"
 import { productsQueries } from "./index.js"
 export default {

@@ -2,34 +2,46 @@ import Ajv from "ajv"
 
 const ajv = new Ajv()
 
-const CreateCategorySchema = {
+const CreateSchema = {
     type: "object",
     properties: {
         name: { type: "string" },
         description: { type: "string" },
-        parentId: { type: "number" },
-        UserId: { type: "number" },
         type: { type: "string" },
+        parentId: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
+
+        User: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
     },
-    required: ["name", "parentId", "type", "UserId"],
+    required: ["name", "description", "type", "User"],
     additionalProperties: false,
 }
 
-const UpdateCategorySchema = {
+const UpdateSchema = {
     type: "object",
     properties: {
         name: { type: "string" },
         description: { type: "string" },
-        parentId: { type: "number" },
-        UserId: { type: "number" },
+        parentId: { type: "string" },
         type: { type: "string" },
+
+        User: {
+            type: "string",
+            pattern: "^[a-f\\d]{24}$",
+        },
     },
-    required: ["name", "type", "parentId", "UserId"],
+    required: ["name", "description", "type", "User"],
     additionalProperties: false,
 }
+
 export default {
     validateCreate: (categoryData) => {
-        const valid = ajv.validate(CreateCategorySchema, categoryData)
+        const valid = ajv.validate(CreateSchema, categoryData)
         if (!valid)
             return {
                 valid,
@@ -38,7 +50,7 @@ export default {
         return { valid }
     },
     validateUpdate: (categoryData) => {
-        const valid = ajv.validate(UpdateCategorySchema, categoryData)
+        const valid = ajv.validate(UpdateSchema, categoryData)
         if (!valid)
             return {
                 valid,

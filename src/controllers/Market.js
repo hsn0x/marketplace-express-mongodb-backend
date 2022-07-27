@@ -36,7 +36,43 @@ export default {
             size: parseInt(size),
         }
 
-        const data = await marketsQueries.findAllQuery({}, [], [], params)
+        const data = await marketsQueries.findAllQuery(
+            {},
+            [
+                {
+                    path: "Avatars",
+                },
+                {
+                    path: "Images",
+                },
+
+                {
+                    path: "Products",
+                },
+                {
+                    path: "Categories",
+                },
+
+                {
+                    path: "Likes",
+                },
+                {
+                    path: "Votes",
+                },
+                {
+                    path: "Favorites",
+                },
+
+                {
+                    path: "Comments",
+                },
+                {
+                    path: "Reviews",
+                },
+            ],
+            [],
+            params
+        )
         if (data) {
             return res.status(200).json(data)
         } else {

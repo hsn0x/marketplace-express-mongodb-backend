@@ -64,6 +64,25 @@ const schema = Schema(
                 ref: "Category",
             },
         ],
+
+        Likes: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Like",
+            },
+        ],
+        Votes: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Vote",
+            },
+        ],
+        Favorites: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Favorite",
+            },
+        ],
     },
     { timestamps: true }
 )

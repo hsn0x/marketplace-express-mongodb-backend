@@ -36,7 +36,31 @@ export default {
             size: parseInt(size),
         }
 
-        const data = await productsQueries.findAllQuery({}, [], [], params)
+        const data = await productsQueries.findAllQuery(
+            {},
+            [
+                {
+                    path: "Market",
+                },
+                {
+                    path: "User",
+                },
+                {
+                    path: "Images",
+                },
+                {
+                    path: "Comments",
+                },
+                {
+                    path: "Reviews",
+                },
+                {
+                    path: "Categories",
+                },
+            ],
+            [],
+            params
+        )
         if (data) {
             return res.status(200).json(data)
         } else {
