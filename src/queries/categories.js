@@ -9,7 +9,6 @@ export default {
         { page, size }
     ) => {
         const { limit, skip } = getPagination(page, size)
-
         const rows = await CategoryModel.find(filter)
             .select(salt)
             .populate(populate)

@@ -49,7 +49,7 @@ export default {
     register: async (req, res, next) => {
         const { firstName, lastName, username, email, password } = req.body
 
-        const userData = {
+        const data = {
             firstName,
             lastName,
             username,
@@ -57,11 +57,11 @@ export default {
             password,
         }
 
-        const hashedPassword = genPassword(userData.password)
-        userData.passwordHash = hashedPassword.hash
-        userData.passwordSalt = hashedPassword.salt
+        const hashedPassword = genPassword(data.password)
+        data.passwordHash = hashedPassword.hash
+        data.passwordSalt = hashedPassword.salt
 
-        const isRegisterValid = AuthValidation.validateRegister(userData)
+        const isRegisterValid = AuthValidation.validateRegister(data)
 
         if (!isRegisterValid.valid) {
             return res.status(401).json({
@@ -70,13 +70,15 @@ export default {
             })
         }
 
-        const user = await authQueries.registerQuery(userData)
+        const recordCreated = await authQueries.registerQuery(data)
 
-        if (user) {
-            res.status(201).json(user)
+        if (recordCreated) {
+            return res.status(201).json({
+                message: `User ${recordCreated.username} created with ID: ${recordCreated._id}`,
+            })
         } else {
             res.status(500).json({
-                message: `Faile to create a user`,
+                message: `Faile to create a record`,
             })
         }
     },

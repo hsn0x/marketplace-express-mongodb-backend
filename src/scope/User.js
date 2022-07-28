@@ -24,11 +24,32 @@ export default {
         {
             path: "Favorites",
         },
+
         {
             path: "Comments",
+            populate: [
+                {
+                    path: "User",
+                    populate: [
+                        {
+                            path: "Avatars",
+                        },
+                    ],
+                },
+            ],
         },
         {
             path: "Reviews",
+            populate: [
+                {
+                    path: "User",
+                    populate: [
+                        {
+                            path: "Avatars",
+                        },
+                    ],
+                },
+            ],
         },
 
         {
@@ -65,9 +86,6 @@ export default {
         {
             path: "Products",
             populate: [
-                {
-                    path: "Avatars",
-                },
                 {
                     path: "Images",
                 },

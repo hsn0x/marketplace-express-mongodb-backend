@@ -148,13 +148,13 @@ export default {
             })
         }
 
-        const createdRecord = await marketsQueries.createQuery(data)
+        const recordCreated = await marketsQueries.createQuery(data)
 
         await usersQueries.findOneAndUpdate(
             { _id: user.id },
             {
                 $push: {
-                    Markets: createdRecord._id,
+                    Markets: recordCreated._id,
                 },
             }
         )
@@ -163,14 +163,14 @@ export default {
                 { _id: categoryId },
                 {
                     $push: {
-                        Markets: createdRecord._id,
+                        Markets: recordCreated._id,
                     },
                 }
             )
         })
 
-        if (createdRecord) {
-            return res.status(201).json(createdRecord)
+        if (recordCreated) {
+            return res.status(201).json(recordCreated)
         } else {
             return res.status(500).json({ message: `Faile to create a record` })
         }

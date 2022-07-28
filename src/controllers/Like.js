@@ -119,19 +119,19 @@ export default {
             })
         }
 
-        const createdRecord = await likesQueries.createQuery(data)
+        const recordCreated = await likesQueries.createQuery(data)
 
         await usersQueries.findOneAndUpdate(
             { _id: user.id },
             {
                 $push: {
-                    Likes: createdRecord._id,
+                    Likes: recordCreated._id,
                 },
             }
         )
 
-        if (createdRecord) {
-            return res.status(201).json(createdRecord)
+        if (recordCreated) {
+            return res.status(201).json(recordCreated)
         } else {
             return res.status(500).json({ message: `Faile to create a record` })
         }

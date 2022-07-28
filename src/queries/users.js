@@ -46,8 +46,8 @@ export default {
         return recordUpdated
     },
     createQuery: async (data, options) => {
-        const createdUser = UserModel.create(data, options)
-        return createdUser
+        const recordCreated = UserModel.create(data, options)
+        return recordCreated
     },
     updateOneQuery: async (filter, data, options = {}) => {
         const recordUpdated = await UserModel.updateOne(filter, data, options)

@@ -138,19 +138,19 @@ export default {
             })
         }
 
-        const createdRecord = await commentsQueries.createQuery(data)
+        const recordCreated = await commentsQueries.createQuery(data)
 
         await usersQueries.findOneAndUpdate(
             { _id: user.id },
             {
                 $push: {
-                    Comments: createdRecord._id,
+                    Comments: recordCreated._id,
                 },
             }
         )
 
-        if (createdRecord) {
-            return res.status(201).json(createdRecord)
+        if (recordCreated) {
+            return res.status(201).json(recordCreated)
         } else {
             return res.status(500).json({ message: `Faile to create a record` })
         }

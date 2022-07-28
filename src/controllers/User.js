@@ -28,35 +28,22 @@ export default {
     },
     getById: async (req, res) => {
         const id = req.params.id
-        const user = await usersQueries.findByIdQuery(id, UserScope.all, [])
-        if (user) {
-            res.status(200).json({ user })
+        const data = await usersQueries.findByIdQuery(id, UserScope.all, [])
+        if (data) {
+            res.status(200).json(data)
         } else {
             res.status(404).json({ message: `User not found with ID: ${id}` })
         }
     },
     getByUsername: async (req, res) => {
         const username = req.params.username
-        const user = await usersQueries.findOneQuery(
+        const data = await usersQueries.findOneQuery(
             { username },
-            [
-                "Avatars",
-                "Images",
-                "Roles",
-                "Markets",
-                "Products",
-                "Categories",
-                "Posts",
-                "Likes",
-                "Votes",
-                "Favorites",
-                "Comments",
-                "Reviews",
-            ],
+            UserScope.all,
             []
         )
-        if (user) {
-            res.status(200).json({ user })
+        if (data) {
+            res.status(200).json(data)
         } else {
             res.status(404).json({
                 message: `User not found with ID: ${username}`,
@@ -65,26 +52,13 @@ export default {
     },
     getByEmail: async (req, res) => {
         const email = parseInt(req.params.email)
-        const user = await usersQueries.findOneQuery(
+        const data = await usersQueries.findOneQuery(
             { email },
-            [
-                "Avatars",
-                "Images",
-                "Roles",
-                "Markets",
-                "Products",
-                "Categories",
-                "Posts",
-                "Likes",
-                "Votes",
-                "Favorites",
-                "Comments",
-                "Reviews",
-            ],
+            UserScope.all,
             []
         )
-        if (user) {
-            res.status(200).json({ user })
+        if (data) {
+            res.status(200).json(data)
         } else {
             res.status(404).json({
                 message: `User not found with email: ${email}`,
@@ -130,13 +104,13 @@ export default {
             })
         }
 
-        const user = await usersQueries.createQuery(data)
+        const recordCreated = await usersQueries.createQuery(data)
 
-        if (user) {
-            res.status(201).json(user)
+        if (recordCreated) {
+            res.status(201).json(recordCreated)
         } else {
             res.status(500).json({
-                message: `Faile to create a user`,
+                message: `Faile to create a record`,
             })
         }
     },
@@ -164,15 +138,15 @@ export default {
             })
         }
 
-        const updatedUser = await usersQueries.updateOneQuery({ id }, data)
-        if (updatedUser) {
+        const updatedRecord = await usersQueries.updateOneQuery({ id }, data)
+        if (updatedRecord) {
             res.status(200).json({
                 message: `User updated with ID: ${user.id}`,
-                updatedUser,
+                updatedRecord,
             })
         } else {
             res.status(500).json({
-                message: `Faile to update a user, ${id}`,
+                message: `Faile to update a record, ${id}`,
             })
         }
     },
@@ -193,15 +167,15 @@ export default {
                 errors: isUserValid.errors,
             })
         }
-        const updatedUser = await usersQueries.updateOneQuery({ id }, data)
-        if (updatedUser) {
+        const updatedRecord = await usersQueries.updateOneQuery({ id }, data)
+        if (updatedRecord) {
             res.status(200).json({
                 message: `User updated with ID: ${user.id}`,
-                data: updatedUser,
+                data: updatedRecord,
             })
         } else {
             res.status(500).json({
-                message: `Faile to update a user, ${id}`,
+                message: `Faile to update a record, ${id}`,
             })
         }
     },
@@ -210,7 +184,7 @@ export default {
         const { session, user } = req
         if (user.id !== id) {
             return res.status(401).json({
-                message: `You are not authorized to update this user`,
+                message: `You are not authorized to update this record`,
             })
         }
 
@@ -269,15 +243,15 @@ export default {
         }
 
         data.password = data.newPassword
-        const updatedUser = await usersQueries.updateOneQuery({ id }, data)
-        if (updatedUser) {
+        const updatedRecord = await usersQueries.updateOneQuery({ id }, data)
+        if (updatedRecord) {
             res.status(200).json({
                 message: `User updated with ID: ${user.id}`,
                 data: updatedUser,
             })
         } else {
             res.status(500).json({
-                message: `Faile to update a user, ${id}`,
+                message: `Faile to update a record, ${id}`,
             })
         }
     },
