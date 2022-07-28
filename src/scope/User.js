@@ -64,7 +64,14 @@ export default {
                 {
                     path: "Categories",
                 },
-
+                {
+                    path: "User",
+                    populate: [
+                        {
+                            path: "Avatars",
+                        },
+                    ],
+                },
                 {
                     path: "Likes",
                 },
@@ -92,7 +99,14 @@ export default {
                 {
                     path: "Categories",
                 },
-
+                {
+                    path: "User",
+                    populate: [
+                        {
+                            path: "Avatars",
+                        },
+                    ],
+                },
                 {
                     path: "Likes",
                 },

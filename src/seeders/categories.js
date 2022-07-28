@@ -7,11 +7,19 @@ import {
 } from "../models/index.js"
 import slugify from "slugify"
 import { randomNumber } from "../utils/index.js"
+import { usersQueries } from "../queries/index.js"
 
 export default {
     createFake: async (record) => {
         console.log(`Creating ${record} fake categories...`)
 
+        const OWNER = await usersQueries.findOneQuery({
+            username: "justin_deo",
+        })
+
+        /**
+         * Fake CAtegories Images, Avatars
+         */
         const fakeCategoriesImages = []
         const fakeCategoriesAvatars = []
 
@@ -19,6 +27,10 @@ export default {
         const fakeCategoriesLevelTypeProduct2 = []
         const fakeCategoriesLevelTypeProduct3 = []
 
+        /**
+         * Fake Categories Level 1
+         * Type: Product
+         */
         for (let index = 0; index < record; index++) {
             const image = new ImageModel({
                 public_id: faker.random.word(),
@@ -37,8 +49,8 @@ export default {
             const category = new CategoryModel({
                 name,
                 description: faker.lorem.sentence(),
-                parentId: 0,
-                UserId: 1,
+                parentId: "0",
+                User: OWNER._id,
                 type: "product",
 
                 Images: image._id,
@@ -74,7 +86,7 @@ export default {
                 name,
                 description: faker.lorem.sentence(),
                 parentId: randomCategoryLevel1._id,
-                UserId: 1,
+                User: OWNER._id,
                 type: "product",
             })
 
@@ -108,7 +120,7 @@ export default {
                 name,
                 description: faker.lorem.sentence(),
                 parentId: randomCategoryLevel2._id,
-                UserId: 1,
+                User: OWNER._id,
                 type: "product",
             })
 
@@ -118,10 +130,19 @@ export default {
             fakeCategoriesLevelTypeProduct3.push(category)
         }
 
+        /**
+         * Fake Categories Level Type Market 1
+         * Fake Categories Level Type Market 2
+         * Fake Categories Level Type Market 3
+         */
         const fakeCategoriesLevelTypeMarket1 = []
         const fakeCategoriesLevelTypeMarket2 = []
         const fakeCategoriesLevelTypeMarket3 = []
 
+        /**
+         * Fake Categories Level 1
+         * Type: Market
+         */
         for (let index = 0; index < record; index++) {
             const image = new ImageModel({
                 public_id: faker.random.word(),
@@ -140,8 +161,8 @@ export default {
             const category = new CategoryModel({
                 name,
                 description: faker.lorem.sentence(),
-                parentId: 0,
-                UserId: 1,
+                parentId: "0",
+                User: OWNER._id,
                 type: "market",
             })
 
@@ -151,7 +172,7 @@ export default {
             fakeCategoriesLevelTypeMarket1.push(category)
         }
 
-        for (let index = 0; index < record; index++) {
+        for (let index = 0; index < record * 2; index++) {
             const image = new ImageModel({
                 public_id: faker.random.word(),
                 url: faker.image.image(),
@@ -174,7 +195,7 @@ export default {
                 name,
                 description: faker.lorem.sentence(),
                 parentId: randomCategoryLevel1._id,
-                UserId: 1,
+                User: OWNER._id,
                 type: "market",
             })
 
@@ -184,7 +205,7 @@ export default {
             fakeCategoriesLevelTypeMarket2.push(category)
         }
 
-        for (let index = 0; index < record; index++) {
+        for (let index = 0; index < record * 3; index++) {
             const image = new ImageModel({
                 public_id: faker.random.word(),
                 url: faker.image.image(),
@@ -208,7 +229,7 @@ export default {
                 name,
                 description: faker.lorem.sentence(),
                 parentId: randomCategoryLevel2._id,
-                UserId: 1,
+                User: OWNER._id,
                 type: "market",
             })
 

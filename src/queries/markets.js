@@ -1,6 +1,6 @@
 import { getPagination, getPagingData } from "../lib/handlePagination.js"
 import { MarketModel } from "../models/index.js"
-import { marketsQueries } from "./index.js"
+import { marketsQueries, usersQueries } from "./index.js"
 export default {
     findAllQuery: async (
         filter = {},
@@ -52,6 +52,10 @@ export default {
     },
     createQuery: async (data, options) => {
         const recordCreated = MarketModel.create(data, options)
+        await usersQueries.findOneAndUpdate(
+            { _id: data.User._id },
+            { $push: { Markets: recordCreated._id } }
+        )
         return recordCreated
     },
     updateOneQuery: async (filter, data, options = {}) => {
@@ -60,6 +64,10 @@ export default {
     },
     deleteOneQuery: async (filter, options) => {
         const recordDeleted = await MarketModel.deleteOne(filter, options)
+        console.log(recordDeleted)
+        // await usersQueries.findOneAndUpdate({_id: data.User._id}, {
+        //     $pull: { Markets: recordDeleted._id },
+        // })
         return recordDeleted
     },
 }

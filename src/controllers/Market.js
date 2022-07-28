@@ -216,7 +216,18 @@ export default {
     },
     remove: async (req, res) => {
         const id = req.params.id
-        await marketsQueries.deleteOneQuery({ _id: id })
-        res.status(200).json({ message: `Record deleted with ID: ${id}` })
+        const recordDeleted = await marketsQueries.deleteOneQuery({ _id: id })
+        if (
+            recordDeleted.acknowledged == true &&
+            recordDeleted.deletedCount == 1
+        ) {
+            return res.status(200).json({
+                message: `Record deleted with ID: ${id}`,
+            })
+        } else {
+            return res.status(500).json({
+                message: `Faile to delete a record, ${id}`,
+            })
+        }
     },
 }

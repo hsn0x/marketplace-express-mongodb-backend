@@ -22,6 +22,12 @@ const schema = Schema(
         type: {
             type: String,
         },
+
+        User: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        },
+
         Avatars: [
             {
                 type: Schema.Types.ObjectId,
@@ -53,10 +59,6 @@ const schema = Schema(
                 ref: "Product",
             },
         ],
-        User: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
-        },
     },
     { timestamps: true }
 )
