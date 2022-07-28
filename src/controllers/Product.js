@@ -129,7 +129,6 @@ export default {
 
         const {
             title,
-            about,
             description,
             price,
             quantity,
@@ -139,7 +138,6 @@ export default {
         } = req.body
         const data = {
             title,
-            about,
             description,
             price: Number(price),
             quantity: Number(quantity),
@@ -188,18 +186,10 @@ export default {
         const id = req.params.id
         const { session, user } = req
 
-        const {
-            title,
-            about,
-            description,
-            price,
-            quantity,
-            Market,
-            Categories,
-        } = req.body
+        const { title, description, price, quantity, Market, Categories } =
+            req.body
         const data = {
             title,
-            about,
             description,
             price: Number(price),
             quantity: Number(quantity),

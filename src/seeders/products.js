@@ -81,7 +81,6 @@ export default {
             const product = new ProductModel({
                 title: faker.commerce.productName(),
                 description: faker.commerce.productDescription(),
-                about: faker.lorem.paragraph(40),
                 price: faker.commerce.price(),
                 quantity: randomNumber(1, 100),
 

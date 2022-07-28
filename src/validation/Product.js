@@ -7,7 +7,6 @@ const CreateSchema = {
     properties: {
         title: { type: "string" },
         description: { type: "string" },
-        about: { type: "string" },
         price: { type: "number" },
         quantity: { type: "number" },
 
@@ -44,7 +43,6 @@ const UpdateSchema = {
     properties: {
         title: { type: "string" },
         description: { type: "string" },
-        about: { type: "string" },
         price: { type: "number" },
         quantity: { type: "number" },
         Market: { type: "string" },
